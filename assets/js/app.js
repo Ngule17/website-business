@@ -53,7 +53,7 @@
         <div class="hero__inner">
           <span class="badge">✨ Your AI workforce, ready to hire</span>
           <h1>Hire AI employees that<br><span class="grad">work while you sleep.</span></h1>
-          <p class="hero__sub">Browse a team of specialized AI agents — sales, support, content, data, engineering and more. Hire them in one click and put them to work in your workspace.</p>
+          <p class="hero__sub">Hire specialized AI agents — sales, support, content, data, engineering and more. Give them a goal and they work <em>autonomously</em>: deciding, acting, and logging every step.</p>
           <div class="hero__cta">
             <a class="btn btn-primary btn-lg" href="#/agents">Browse agents</a>
             <a class="btn btn-ghost btn-lg" href="#/workspace">My workspace</a>
@@ -71,9 +71,9 @@
           <h2>How it works</h2>
         </div>
         <div class="grid grid-3">
-          <div class="card feature"><div class="feature__icon">🔎</div><h3>1. Browse</h3><p>Explore specialized AI agents, each with a clear role and skill set.</p></div>
-          <div class="card feature"><div class="feature__icon">✅</div><h3>2. Hire</h3><p>Add agents to your workspace with a single click. No contracts.</p></div>
-          <div class="card feature"><div class="feature__icon">💬</div><h3>3. Delegate</h3><p>Chat with your agents to get real work done, any time of day.</p></div>
+          <div class="card feature"><div class="feature__icon">✅</div><h3>1. Hire</h3><p>Add specialized AI agents to your workspace with a single click.</p></div>
+          <div class="card feature"><div class="feature__icon">🎯</div><h3>2. Assign a goal</h3><p>Give an agent a mission. It plans, decides, and acts on its own.</p></div>
+          <div class="card feature"><div class="feature__icon">📋</div><h3>3. Review the work</h3><p>Watch every decision and action land in your operations dashboard.</p></div>
         </div>
       </section>
 
@@ -135,10 +135,35 @@
             <a class="btn btn-ghost btn-block ${hired ? "" : "is-disabled"}" href="${hired ? "#/chat/" + agent.id : "#"}">
               💬 Chat with ${esc(agent.name)}
             </a>
-            <p class="hint">${hired ? "On your team. Start a conversation any time." : "Hire to unlock chat and add to your workspace."}</p>
+            <p class="hint">${hired ? "On your team." : "Hire to unlock chat, autonomous missions, and your workspace."}</p>
           </aside>
         </div>
+
+        ${hired ? assignPanel(agent) : ""}
       </section>`;
+  }
+
+  // Panel for launching an autonomous mission for a hired agent.
+  function assignPanel(agent) {
+    const recent = Store.get().missions.filter((m) => m.agentId === agent.id).slice(0, 4);
+    return `
+      <div class="assign card">
+        <div class="assign__head">
+          <h3>🤖 Assign an autonomous mission</h3>
+          <span class="mode-pill">${Api.hasKey() ? "Live reasoning" : "Demo mode"} · ${esc(Store.get().settings.executionMode)}</span>
+        </div>
+        <p class="muted small">Give ${esc(agent.name)} a goal. They'll work it autonomously — deciding and taking actions on their own — and log every decision.</p>
+        <div class="assign__row">
+          <input type="text" id="mission-goal" placeholder="e.g. ${esc(agent.starters[0])}" aria-label="Mission goal" />
+          <button class="btn btn-primary" id="assign-run">Run autonomously →</button>
+        </div>
+        <div class="assign__examples">
+          ${agent.starters.map((s) => `<button class="starter" data-goal="${esc(s)}">${esc(s)}</button>`).join("")}
+        </div>
+        ${recent.length ? `
+          <h4 class="assign__sub">Recent missions</h4>
+          <div class="mission-list">${recent.map(missionRow).join("")}</div>` : ""}
+      </div>`;
   }
 
   function viewWorkspace() {
@@ -156,25 +181,41 @@
           </div>
         </section>`;
     }
+    const c = Store.counts();
+    const stats = [
+      ["Missions", c.missions, "#/missions"],
+      ["Emails sent", c.outbox, "#/ops/outbox"],
+      ["Leads", c.leads, "#/ops/crm"],
+      ["Open tasks", c.tasks, "#/ops/tasks"],
+      ["Needs you", c.escalations, "#/ops/escalations"]
+    ];
     return `
       <section class="section">
         <div class="section__head">
           <h2>${esc(s.settings.workspaceName)}</h2>
           <span class="muted">${team.length} agent${team.length > 1 ? "s" : ""} on your team</span>
         </div>
+
+        <div class="ws-stats">
+          ${stats.map(([label, n, href]) => `
+            <a class="ws-stat ${label === "Needs you" && n ? "ws-stat--alert" : ""}" href="${href}">
+              <strong>${n}</strong><span>${label}</span>
+            </a>`).join("")}
+        </div>
+
         <div class="grid grid-3">
           ${team.map((agent) => {
-            const msgs = Store.getConversation(agent.id).length;
+            const active = Store.get().missions.filter((m) => m.agentId === agent.id).length;
             return `
               <article class="card team-card">
                 <div class="agent-card__head">
                   ${avatarEl(agent, 48)}
                   <div><h3>${esc(agent.name)}</h3><p class="role">${esc(agent.role)}</p></div>
                 </div>
-                <p class="muted small">${msgs} message${msgs === 1 ? "" : "s"} exchanged</p>
+                <p class="muted small">${active} mission${active === 1 ? "" : "s"} · ${Store.getConversation(agent.id).length} messages</p>
                 <div class="agent-card__actions">
-                  <a class="btn btn-primary" href="#/chat/${agent.id}">Open chat</a>
-                  <button class="btn btn-ghost" data-hire="${agent.id}">Remove</button>
+                  <a class="btn btn-primary" href="#/agent/${agent.id}">Assign mission</a>
+                  <a class="btn btn-ghost" href="#/chat/${agent.id}">Chat</a>
                 </div>
               </article>`;
           }).join("")}
@@ -251,11 +292,183 @@
               ).join("")}
             </select>
           </label>
-          <p class="hint">With a key set, your agents call the real Claude API live from your browser. Without one, the app runs in demo mode with simulated replies. Your key is never sent anywhere except Anthropic.</p>
+          <label>Autonomous execution mode
+            <select id="set-mode">
+              <option value="simulate" ${s.executionMode === "simulate" ? "selected" : ""}>Simulate — safe, in-app actions only</option>
+              <option value="real" ${s.executionMode === "real" ? "selected" : ""}>Real — act on live systems (needs adapters)</option>
+            </select>
+          </label>
+          <p class="hint">With a key set, your agents reason live via the real Claude API. Without one, the app runs in demo mode. In <strong>Simulate</strong>, autonomous actions (emails, CRM, tasks) stay inside this app. <strong>Real</strong> mode routes actions to integration adapters you configure in <code>tools.js</code>; unconfigured actions safely fail and the agent escalates. Your key is sent only to Anthropic.</p>
           <button class="btn btn-primary" id="save-settings">Save settings</button>
           <span class="saved-note" id="saved-note"></span>
         </div>
       </section>`;
+  }
+
+  /* ---------- missions ---------- */
+  const STATUS_LABEL = { queued: "Queued", running: "Running", done: "Done", failed: "Failed" };
+
+  function missionRow(m) {
+    const agent = byId(m.agentId);
+    const outcome = m.result && m.result.outcome ? m.result.outcome : "";
+    return `
+      <a class="mission-row" href="#/mission/${m.id}">
+        ${agent ? avatarEl(agent, 34) : ""}
+        <div class="mission-row__body">
+          <span class="mission-row__goal">${esc(m.goal)}</span>
+          <span class="muted small">${agent ? esc(agent.name) : "—"} · ${m.log.length} step${m.log.length === 1 ? "" : "s"}</span>
+        </div>
+        <span class="status status--${m.status}">${STATUS_LABEL[m.status] || m.status}${outcome && m.status === "done" ? " · " + esc(outcome) : ""}</span>
+      </a>`;
+  }
+
+  function viewMissions() {
+    const missions = Store.get().missions;
+    if (missions.length === 0) {
+      return `
+        <section class="section">
+          <h2>Missions</h2>
+          <div class="empty card">
+            <div class="empty__icon">🚀</div>
+            <h3>No missions yet</h3>
+            <p>Open a hired agent and assign an autonomous mission to see them work.</p>
+            <a class="btn btn-primary" href="#/workspace">Go to workspace</a>
+          </div>
+        </section>`;
+    }
+    return `
+      <section class="section">
+        <div class="section__head"><h2>Missions</h2><span class="muted">${missions.length} total</span></div>
+        <div class="mission-list">${missions.map(missionRow).join("")}</div>
+      </section>`;
+  }
+
+  const KIND_ICON = { status: "•", reason: "💭", decision: "🧭", action: "⚙️", error: "⚠️", finish: "🏁" };
+  const TOOL_LABEL = {
+    log_decision: "Decision", research: "Research", send_email: "Sent email",
+    add_lead: "CRM update", create_task: "Created task", complete_task: "Completed task",
+    escalate_to_human: "Escalated", finish: "Finished"
+  };
+
+  function logEntry(e) {
+    if (e.kind === "action") {
+      const label = TOOL_LABEL[e.tool] || e.tool;
+      const detail = `<div class="log__result ${e.status === "error" ? "is-error" : ""}">${esc(e.result || "")}</div>`;
+      return `
+        <div class="log log--action">
+          <span class="log__icon">${KIND_ICON.action}</span>
+          <div class="log__body">
+            <span class="log__tool">${esc(label)}</span>
+            <div class="log__input">${esc(summarizeInput(e.tool, e.input))}</div>
+            ${detail}
+          </div>
+        </div>`;
+    }
+    const cls = e.kind === "error" ? "log--error" : e.kind === "decision" ? "log--decision" : e.kind === "finish" ? "log--finish" : "log--note";
+    const text = e.kind === "finish" ? `<strong>Mission ${esc(e.outcome || "complete")}.</strong> ${esc(e.text || "")}` : esc(e.text || "");
+    return `<div class="log ${cls}"><span class="log__icon">${KIND_ICON[e.kind] || "•"}</span><div class="log__body">${text}</div></div>`;
+  }
+
+  function summarizeInput(tool, input) {
+    if (!input) return "";
+    if (tool === "send_email") return "To " + (input.to || "?") + " — " + (input.subject || "");
+    if (tool === "add_lead") return (input.name || "?") + (input.company ? " @ " + input.company : "");
+    if (tool === "create_task" || tool === "complete_task") return input.title || input.task || "";
+    if (tool === "research") return input.subject || "";
+    if (tool === "escalate_to_human") return input.question || input.reason || "";
+    if (tool === "finish") return input.summary || "";
+    return Object.keys(input).map((k) => input[k]).join(" · ");
+  }
+
+  function viewMission(mid) {
+    const m = Store.getMission(mid);
+    if (!m) return viewNotFound();
+    const agent = byId(m.agentId);
+    return `
+      <section class="section narrow">
+        <a class="link back" href="#/missions">← All missions</a>
+        <div class="mission-head card">
+          <div class="mission-head__top">
+            ${agent ? avatarEl(agent, 48) : ""}
+            <div>
+              <h2>${esc(m.goal)}</h2>
+              <span class="muted small">${agent ? esc(agent.name) + " · " + esc(agent.role) : ""}</span>
+            </div>
+            <span class="status status--${m.status}" id="mission-status">${STATUS_LABEL[m.status] || m.status}</span>
+          </div>
+        </div>
+        <div class="timeline" id="mission-log">${m.log.map(logEntry).join("")}</div>
+        <div id="mission-actions" class="mission-actions"></div>
+      </section>`;
+  }
+
+  /* ---------- operations dashboard ---------- */
+  function viewOps() {
+    const s = Store.get();
+    const c = Store.counts();
+    const tab = (location.hash.split("/")[2]) || "outbox";
+    const tabs = [
+      ["outbox", "Outbox", s.outbox.length],
+      ["crm", "CRM", s.leads.length],
+      ["tasks", "Tasks", s.tasks.filter((t) => !t.done).length],
+      ["escalations", "Human review", c.escalations]
+    ];
+    return `
+      <section class="section">
+        <div class="section__head"><h2>Operations</h2><span class="muted">everything your agents produced</span></div>
+        <div class="ops-tabs">
+          ${tabs.map(([k, label, n]) => `<a class="ops-tab ${tab === k ? "active" : ""}" href="#/ops/${k}">${label}${n ? ` <span class="tab-count">${n}</span>` : ""}</a>`).join("")}
+        </div>
+        <div class="ops-body">${opsPanel(tab, s)}</div>
+      </section>`;
+  }
+
+  function agentName(id) { const a = byId(id); return a ? a.name : "Agent"; }
+
+  function opsPanel(tab, s) {
+    if (tab === "crm") {
+      if (!s.leads.length) return emptyPanel("🗂️", "No leads yet", "Agents add leads here when they run sales or recruiting missions.");
+      return `<div class="op-grid">${s.leads.map((l) => `
+        <div class="card op-card">
+          <div class="op-card__head"><strong>${esc(l.name)}</strong><span class="status status--lead-${esc(l.status)}">${esc(l.status)}</span></div>
+          ${l.company ? `<p class="muted small">${esc(l.company)}</p>` : ""}
+          ${l.note ? `<p class="small">${esc(l.note)}</p>` : ""}
+          <p class="op-card__by">by ${esc(agentName(l.agentId))}</p>
+        </div>`).join("")}</div>`;
+    }
+    if (tab === "tasks") {
+      if (!s.tasks.length) return emptyPanel("✅", "No tasks yet", "Agents create follow-up tasks so work isn't dropped.");
+      return `<div class="op-list">${s.tasks.map((t) => `
+        <label class="task-item ${t.done ? "is-done" : ""}">
+          <input type="checkbox" data-task="${t.id}" ${t.done ? "checked" : ""}>
+          <span class="task-item__title">${esc(t.title)}</span>
+          <span class="prio prio--${esc(t.priority || "medium")}">${esc(t.priority || "medium")}</span>
+          <span class="muted small">${esc(agentName(t.agentId))}</span>
+        </label>`).join("")}</div>`;
+    }
+    if (tab === "escalations") {
+      if (!s.escalations.length) return emptyPanel("🙋", "Nothing needs you", "When an agent hits a decision above its authority, it lands here.");
+      return `<div class="op-list">${s.escalations.map((e) => `
+        <div class="card esc-card ${e.resolved ? "is-done" : ""}">
+          <div class="esc-card__body">
+            <strong>${esc(e.question)}</strong>
+            <p class="muted small">${esc(e.reason)} · raised by ${esc(agentName(e.agentId))}</p>
+          </div>
+          ${e.resolved ? `<span class="status status--done">Resolved</span>` : `<button class="btn btn-primary small" data-resolve="${e.id}">Approve / Resolve</button>`}
+        </div>`).join("")}</div>`;
+    }
+    // outbox
+    if (!s.outbox.length) return emptyPanel("📤", "Outbox is empty", "Emails your agents compose and send appear here.");
+    return `<div class="op-list">${s.outbox.map((m) => `
+      <div class="card mail-card">
+        <div class="mail-card__head"><strong>${esc(m.subject)}</strong><span class="muted small">→ ${esc(m.to)}</span></div>
+        <p class="mail-card__body">${esc(m.body).replace(/\n/g, "<br>")}</p>
+        <p class="op-card__by">by ${esc(agentName(m.agentId))}</p>
+      </div>`).join("")}</div>`;
+  }
+
+  function emptyPanel(icon, title, sub) {
+    return `<div class="empty card"><div class="empty__icon">${icon}</div><h3>${esc(title)}</h3><p>${esc(sub)}</p></div>`;
   }
 
   function viewNotFound() {
@@ -275,6 +488,9 @@
       case "agent": html = viewAgent(param); break;
       case "workspace": html = viewWorkspace(); break;
       case "chat": html = viewChat(param); break;
+      case "missions": html = viewMissions(); break;
+      case "mission": html = viewMission(param); break;
+      case "ops": html = viewOps(); break;
       case "settings": html = viewSettings(); break;
       default: html = viewNotFound();
     }
@@ -286,14 +502,22 @@
 
   function updateNav() {
     const hired = Store.get().hired.length;
-    document.querySelectorAll("[data-nav-count]").forEach((el) => {
-      el.textContent = hired ? hired : "";
-      el.style.display = hired ? "inline-flex" : "none";
+    const c = Store.counts();
+    const badges = { "data-nav-count": hired, "data-nav-ops": c.escalations };
+    Object.keys(badges).forEach((attr) => {
+      document.querySelectorAll("[" + attr + "]").forEach((el) => {
+        const n = badges[attr];
+        el.textContent = n ? n : "";
+        el.style.display = n ? "inline-flex" : "none";
+      });
     });
     const hash = location.hash || "#/";
     document.querySelectorAll(".nav-link").forEach((el) => {
-      el.classList.toggle("active", el.getAttribute("href") === hash ||
-        (el.getAttribute("href") === "#/agents" && hash.startsWith("#/agent")));
+      const href = el.getAttribute("href");
+      el.classList.toggle("active", href === hash ||
+        (href === "#/agents" && hash.startsWith("#/agent") && !hash.startsWith("#/agents")) ||
+        (href === "#/missions" && hash.startsWith("#/mission")) ||
+        (href === "#/ops" && hash.startsWith("#/ops")));
     });
   }
 
@@ -311,6 +535,91 @@
     if (page === "agents") setupFilters();
     if (page === "chat") setupChat(byId(param));
     if (page === "settings") setupSettings();
+    if (page === "agent") setupAssign(byId(param));
+    if (page === "mission") setupMission(param);
+    if (page === "ops") setupOps();
+  }
+
+  /* ---------- autonomous mission wiring ---------- */
+  function setupAssign(agent) {
+    if (!agent) return;
+    const input = document.getElementById("mission-goal");
+    const runBtn = document.getElementById("assign-run");
+    if (!input || !runBtn) return;
+
+    app.querySelectorAll("[data-goal]").forEach((b) =>
+      b.addEventListener("click", () => { input.value = b.getAttribute("data-goal"); input.focus(); })
+    );
+
+    const launch = () => {
+      const goal = input.value.trim();
+      if (!goal) { input.focus(); return; }
+      const mission = Store.createMission(agent.id, goal);
+      location.hash = "#/mission/" + mission.id; // mission view auto-runs queued missions
+    };
+    runBtn.addEventListener("click", launch);
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter") launch(); });
+  }
+
+  function setupMission(mid) {
+    const mission = Store.getMission(mid);
+    if (!mission) return;
+    const agent = byId(mission.agentId);
+    const logEl = document.getElementById("mission-log");
+    const statusEl = document.getElementById("mission-status");
+    const actionsEl = document.getElementById("mission-actions");
+    if (!agent || !logEl) return;
+
+    const append = (entry) => {
+      logEl.insertAdjacentHTML("beforeend", logEntry(entry));
+      const last = logEl.lastElementChild;
+      if (last) {
+        last.classList.add("log--enter");
+        last.scrollIntoView({ block: "nearest" });
+      }
+    };
+
+    function renderActions() {
+      const m = Store.getMission(mid);
+      if (!m) return;
+      if (m.status === "done" || m.status === "failed") {
+        const r = m.result || {};
+        actionsEl.innerHTML = `
+          <div class="card mission-result">
+            <h3>${m.status === "failed" ? "⚠️ Blocked" : "🏁 Result"}</h3>
+            <p>${esc(r.summary || "")}</p>
+            <div class="mission-result__cta">
+              <a class="btn btn-ghost" href="#/ops/outbox">View operations →</a>
+              <a class="btn btn-primary" href="#/agent/${agent.id}">Assign another mission</a>
+            </div>
+          </div>`;
+      }
+    }
+
+    if (mission.status === "queued") {
+      // Autonomously run it now, streaming steps into the log.
+      if (statusEl) statusEl.textContent = STATUS_LABEL.running;
+      if (statusEl) statusEl.className = "status status--running";
+      Agent.run(mission, agent, append)
+        .catch(() => {})
+        .finally(() => {
+          const m = Store.getMission(mid);
+          if (statusEl && m) { statusEl.textContent = STATUS_LABEL[m.status]; statusEl.className = "status status--" + m.status; }
+          renderActions();
+          updateNav();
+        });
+    } else {
+      renderActions();
+    }
+  }
+
+  function setupOps() {
+    app.querySelectorAll("[data-task]").forEach((cb) =>
+      cb.addEventListener("change", () => { Store.completeTask(cb.getAttribute("data-task")); route(); })
+    );
+    app.querySelectorAll("[data-resolve]").forEach((b) =>
+      b.addEventListener("click", () => { Store.resolveEscalation(b.getAttribute("data-resolve")); route(); })
+    );
   }
 
   function setupFilters() {
@@ -412,7 +721,8 @@
       Store.updateSettings({
         workspaceName: document.getElementById("set-workspace").value.trim() || "My Company",
         apiKey: document.getElementById("set-apikey").value.trim(),
-        model: document.getElementById("set-model").value
+        model: document.getElementById("set-model").value,
+        executionMode: document.getElementById("set-mode").value
       });
       const note = document.getElementById("saved-note");
       note.textContent = "✓ Saved";
