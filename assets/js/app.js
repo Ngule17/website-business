@@ -3,9 +3,9 @@
 (function () {
   "use strict";
 
-  const AGENTS = window.APP_DATA.AGENTS;
   const INDUSTRIES = window.APP_DATA.INDUSTRIES;
-  const byId = (id) => AGENTS.find((a) => a.id === id);
+  const agents = () => Store.agents(); // built-in + user-created, resolved live
+  const byId = (id) => Store.agentById(id);
   const industryMeta = (name) => INDUSTRIES.find((i) => i.name === name) || { icon: "🏢", accent: "#6366f1" };
   const app = document.getElementById("app");
 
@@ -27,7 +27,7 @@
         <div class="agent-card__head">
           ${avatarEl(agent, 56)}
           <div>
-            <h3>${esc(agent.name)}</h3>
+            <h3>${esc(agent.name)}${agent.custom ? ` <span class="custom-tag" title="Your custom agent">★</span>` : ""}</h3>
             <p class="role">${esc(agent.role)}</p>
           </div>
           <span class="dept-chip">${industryMeta(agent.industry).icon} ${esc(agent.industry)}</span>
@@ -48,7 +48,7 @@
 
   /* ---------- views ---------- */
   function viewHome() {
-    const total = AGENTS.length;
+    const total = agents().length;
     // Feature one agent from a few different industries for variety.
     const featuredIds = ["aria-sales", "vera-scribe", "portia-contracts", "iris-seo", "brooks-mortgage", "hugo-travel"];
     const featured = featuredIds.map(byId).filter(Boolean);
@@ -74,7 +74,7 @@
         <div class="section__head"><h2>Explore by industry</h2><a class="link" href="#/agents">Browse all →</a></div>
         <div class="industry-grid">
           ${INDUSTRIES.map((ind) => {
-            const n = AGENTS.filter((a) => a.industry === ind.name).length;
+            const n = agents().filter((a) => a.industry === ind.name).length;
             return `
               <a class="industry-tile" href="#/agents/${encodeURIComponent(ind.name)}" style="--accent:${ind.accent}">
                 <span class="industry-tile__icon">${ind.icon}</span>
@@ -111,7 +111,10 @@
       <section class="section">
         <div class="section__head">
           <h2>Marketplace</h2>
-          <span class="muted" id="result-count">${AGENTS.length} specialists</span>
+          <div class="market-head-actions">
+            <span class="muted" id="result-count">${agents().length} specialists</span>
+            <a class="btn btn-primary small" href="#/create">＋ Create agent</a>
+          </div>
         </div>
         <div class="market-search">
           <span class="market-search__icon">🔍</span>
@@ -162,7 +165,8 @@
             <a class="btn btn-ghost btn-block ${hired ? "" : "is-disabled"}" href="${hired ? "#/chat/" + agent.id : "#"}">
               💬 Chat with ${esc(agent.name)}
             </a>
-            <p class="hint">${hired ? "On your team." : "Hire to unlock chat, autonomous missions, and your workspace."}</p>
+            ${agent.custom ? `<a class="btn btn-ghost btn-block" href="#/create/${agent.id}">✎ Edit agent</a>` : ""}
+            <p class="hint">${agent.custom ? "Your custom agent." : hired ? "On your team." : "Hire to unlock chat, autonomous missions, and your workspace."}</p>
           </aside>
         </div>
 
@@ -624,6 +628,82 @@
       </section>`;
   }
 
+  /* ---------- create / edit a custom agent ---------- */
+  const FUNCTIONS = ["Sales", "Support", "Marketing", "Operations", "Engineering", "People", "Leadership"];
+
+  function viewCreate(param) {
+    const editing = param ? byId(decodeURIComponent(param)) : null;
+    const isEdit = !!(editing && editing.custom);
+    const a = isEdit ? editing : {
+      name: "", role: "", industry: INDUSTRIES[0].name, department: "Operations",
+      avatar: "🤖", tagline: "", description: "", skills: [], starters: [], systemPrompt: "", manager: false
+    };
+    return `
+      <section class="section narrow">
+        <a class="link back" href="#/agents">← Back to marketplace</a>
+        <h2>${isEdit ? "Edit agent" : "Create your own agent"}</h2>
+        <p class="muted">Define a specialist and it joins your marketplace — hireable, chattable, and ready to run autonomous missions.</p>
+        <div class="card form">
+          <div class="form-row">
+            <label class="emoji-field">Avatar<input id="c-avatar" maxlength="4" value="${esc(a.avatar)}" /></label>
+            <label>Name<input id="c-name" value="${esc(a.name)}" placeholder="e.g. Vera" /></label>
+          </div>
+          <label>Role / title<input id="c-role" value="${esc(a.role)}" placeholder="e.g. Insurance Claims Adjuster" /></label>
+          <div class="form-row">
+            <label>Industry<select id="c-industry">${INDUSTRIES.map((i) => `<option ${a.industry === i.name ? "selected" : ""}>${esc(i.name)}</option>`).join("")}</select></label>
+            <label>Function<select id="c-dept">${FUNCTIONS.map((d) => `<option ${a.department === d ? "selected" : ""}>${d}</option>`).join("")}</select></label>
+          </div>
+          <label>Tagline<input id="c-tagline" value="${esc(a.tagline)}" placeholder="One punchy line" /></label>
+          <label>Description<textarea id="c-desc" rows="2" placeholder="What they do">${esc(a.description)}</textarea></label>
+          <label>Skills <span class="muted small">(comma-separated)</span><input id="c-skills" value="${esc(a.skills.join(", "))}" placeholder="Claims triage, Fraud checks, Policy review" /></label>
+          <label>Example prompts <span class="muted small">(one per line)</span><textarea id="c-starters" rows="3" placeholder="Draft a claim summary&#10;Explain a denial to a policyholder">${esc(a.starters.join("\n"))}</textarea></label>
+          <label>System prompt <span class="muted small">(the persona &amp; instructions that drive it)</span><textarea id="c-system" rows="4" placeholder="You are ... You do ... You always ...">${esc(a.systemPrompt)}</textarea></label>
+          <label class="check"><input type="checkbox" id="c-manager" ${a.manager ? "checked" : ""}> This is a manager — it delegates work to other specialists instead of doing it itself</label>
+          <div class="form-actions">
+            <button class="btn btn-primary" id="c-save">${isEdit ? "Save changes" : "Create agent"}</button>
+            ${isEdit ? `<button class="btn btn-danger" id="c-delete">Delete</button>` : ""}
+            <span class="saved-note" id="c-note"></span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  function fieldVal(id) { const el = document.getElementById(id); return el ? el.value.trim() : ""; }
+
+  function setupCreate(param) {
+    const editing = param ? byId(decodeURIComponent(param)) : null;
+    const isEdit = !!(editing && editing.custom);
+    const save = document.getElementById("c-save");
+    const note = document.getElementById("c-note");
+    if (!save) return;
+
+    save.addEventListener("click", () => {
+      const name = fieldVal("c-name"), role = fieldVal("c-role"), system = fieldVal("c-system");
+      if (!name || !role || !system) {
+        note.textContent = "Name, role, and system prompt are required.";
+        note.className = "saved-note err";
+        return;
+      }
+      const industry = fieldVal("c-industry");
+      const obj = {
+        name: name, role: role, industry: industry, department: fieldVal("c-dept"),
+        avatar: fieldVal("c-avatar") || "🤖", accent: industryMeta(industry).accent,
+        tagline: fieldVal("c-tagline") || role, description: fieldVal("c-desc") || "",
+        skills: fieldVal("c-skills").split(",").map((s) => s.trim()).filter(Boolean),
+        starters: fieldVal("c-starters").split("\n").map((s) => s.trim()).filter(Boolean).slice(0, 4),
+        systemPrompt: system, manager: document.getElementById("c-manager").checked
+      };
+      if (!obj.starters.length) obj.starters = ["Help me with a task in your specialty."];
+      if (isEdit) { Store.updateCustomAgent(editing.id, obj); location.hash = "#/agent/" + editing.id; }
+      else { const created = Store.addCustomAgent(obj); location.hash = "#/agent/" + created.id; }
+    });
+
+    const del = document.getElementById("c-delete");
+    if (del) del.addEventListener("click", () => {
+      if (editing) { Store.removeCustomAgent(editing.id); location.hash = "#/agents"; }
+    });
+  }
+
   function viewNotFound() {
     return `<section class="section"><div class="empty card"><div class="empty__icon">🤖</div><h3>Page not found</h3><a class="btn btn-primary" href="#/">Go home</a></div></section>`;
   }
@@ -644,6 +724,7 @@
       case "missions": html = viewMissions(); break;
       case "mission": html = viewMission(param); break;
       case "activity": html = viewActivity(param); break;
+      case "create": html = viewCreate(param); break;
       case "ops": html = viewOps(); break;
       case "settings": html = viewSettings(); break;
       default: html = viewNotFound();
@@ -669,7 +750,7 @@
     document.querySelectorAll(".nav-link").forEach((el) => {
       const href = el.getAttribute("href");
       el.classList.toggle("active", href === hash ||
-        (href === "#/agents" && (hash.startsWith("#/agents") || hash.startsWith("#/agent/"))) ||
+        (href === "#/agents" && (hash.startsWith("#/agents") || hash.startsWith("#/agent/") || hash.startsWith("#/create"))) ||
         (href === "#/missions" && hash.startsWith("#/mission")) ||
         (href === "#/activity" && hash.startsWith("#/activity")) ||
         (href === "#/ops" && hash.startsWith("#/ops")));
@@ -694,6 +775,7 @@
     if (page === "mission") setupMission(param);
     if (page === "ops") setupOps();
     if (page === "activity") setupActivity();
+    if (page === "create") setupCreate(param);
   }
 
   function setupActivity() {
@@ -808,7 +890,7 @@
     }
 
     function render() {
-      const list = AGENTS.filter(matches);
+      const list = agents().filter(matches);
       grid.innerHTML = list.map(agentCard).join("");
       if (count) count.textContent = list.length + " specialist" + (list.length === 1 ? "" : "s");
       if (noResults) noResults.style.display = list.length ? "none" : "";

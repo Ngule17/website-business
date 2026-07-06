@@ -13,8 +13,7 @@
 (function () {
   "use strict";
 
-  const AGENTS = window.APP_DATA.AGENTS;
-  const byId = (id) => AGENTS.find((a) => a.id === id);
+  const byId = (id) => Store.agentById(id); // built-in + custom agents
   const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
   const MAX_STEPS = 10;
   const MAX_DEPTH = 2; // how deep delegation can nest

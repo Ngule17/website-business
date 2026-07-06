@@ -12,6 +12,7 @@
 
   const defaults = () => ({
     hired: [], // array of agent ids on the team
+    customAgents: [], // user-created specialists (same shape as built-in agents, custom:true)
     conversations: {}, // agentId -> [{ role, content, ts }]
     missions: [], // autonomous runs: {id, agentId, goal, status, createdAt, finishedAt, result, log:[]}
     outbox: [], // {id, agentId, missionId, to, subject, body, ts}
@@ -34,6 +35,7 @@
       const p = JSON.parse(raw);
       return {
         hired: Array.isArray(p.hired) ? p.hired : base.hired,
+        customAgents: Array.isArray(p.customAgents) ? p.customAgents : base.customAgents,
         conversations: p.conversations && typeof p.conversations === "object" ? p.conversations : base.conversations,
         missions: Array.isArray(p.missions) ? p.missions : base.missions,
         outbox: Array.isArray(p.outbox) ? p.outbox : base.outbox,
@@ -68,6 +70,33 @@
     subscribe(fn) {
       listeners.add(fn);
       return () => listeners.delete(fn);
+    },
+
+    /* ---- catalog (built-in + custom agents) ---- */
+    agents() {
+      const builtin = (window.APP_DATA && window.APP_DATA.AGENTS) || [];
+      return builtin.concat(state.customAgents);
+    },
+    agentById(id) {
+      return this.agents().find((a) => a.id === id) || null;
+    },
+    isCustom(id) {
+      return state.customAgents.some((a) => a.id === id);
+    },
+    addCustomAgent(agent) {
+      const withId = Object.assign({ id: id("custom"), custom: true }, agent, { custom: true });
+      state.customAgents = state.customAgents.concat(withId);
+      emit();
+      return withId;
+    },
+    updateCustomAgent(agentId, patch) {
+      state.customAgents = state.customAgents.map((a) => (a.id === agentId ? Object.assign({}, a, patch, { id: agentId, custom: true }) : a));
+      emit();
+    },
+    removeCustomAgent(agentId) {
+      state.customAgents = state.customAgents.filter((a) => a.id !== agentId);
+      state.hired = state.hired.filter((x) => x !== agentId); // also take off the team
+      emit();
     },
 
     /* ---- team ---- */

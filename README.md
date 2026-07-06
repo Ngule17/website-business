@@ -8,9 +8,14 @@ them a goal to pursue autonomously — 24/7.
 
 ## Features
 
-- **Marketplace** — 30 specialized AI employees across 9 industries, each with a
+- **Marketplace** — 30+ specialized AI employees across 9 industries, each with a
   role, industry, skill set, and persona. Search by name/role/industry/skill and
   filter by industry, or explore by industry from the home page.
+- **Create your own agent** — build a custom specialist right in the marketplace
+  (name, role, industry, avatar, skills, example prompts, and system prompt; mark
+  it a manager to give it delegation). Custom agents are saved in your browser and
+  work exactly like built-ins — hireable, chattable, and mission-capable. Edit or
+  delete them any time.
 - **Autonomous missions** — give an agent a goal and it works on its own: it
   reasons, **decides**, takes **actions**, observes the results, and repeats
   until it's done — logging every decision to a live timeline.
