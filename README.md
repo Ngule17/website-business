@@ -1,14 +1,16 @@
 # AI Workforce
 
-A web app that hosts **AI employees and agents**. Browse a directory of
-specialized AI agents (sales, support, content, data, engineering, recruiting),
-hire them into your workspace with one click, and chat with them to get work
-done — 24/7.
+A **marketplace of AI employees and agents** — 30 specialists across 9
+industries (General Business, Healthcare, Legal, Finance & Accounting, Real
+Estate, E-commerce & Retail, Marketing & Media, Education, and Hospitality &
+Travel). Hire them into your workspace with one click, chat with them, or give
+them a goal to pursue autonomously — 24/7.
 
 ## Features
 
-- **Agent directory** — six specialized AI employees, each with a role,
-  department, skill set, and persona. Filter by department.
+- **Marketplace** — 30 specialized AI employees across 9 industries, each with a
+  role, industry, skill set, and persona. Search by name/role/industry/skill and
+  filter by industry, or explore by industry from the home page.
 - **Autonomous missions** — give an agent a goal and it works on its own: it
   reasons, **decides**, takes **actions**, observes the results, and repeats
   until it's done — logging every decision to a live timeline.
@@ -52,7 +54,7 @@ python3 -m http.server 8000
 ```
 index.html            App shell + navigation
 assets/css/app.css     Styling (dark, responsive, no framework)
-assets/js/data.js      Agent catalog (roles, skills, personas)
+assets/js/data.js      Marketplace catalog (30 agents, 9 industries) + metadata
 assets/js/store.js     Persistent state (localStorage)
 assets/js/api.js       Chat backend — Claude API + demo fallback
 assets/js/tools.js     Agent tools + pluggable action adapters (simulate/real)

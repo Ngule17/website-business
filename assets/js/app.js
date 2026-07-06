@@ -4,7 +4,9 @@
   "use strict";
 
   const AGENTS = window.APP_DATA.AGENTS;
+  const INDUSTRIES = window.APP_DATA.INDUSTRIES;
   const byId = (id) => AGENTS.find((a) => a.id === id);
+  const industryMeta = (name) => INDUSTRIES.find((i) => i.name === name) || { icon: "🏢", accent: "#6366f1" };
   const app = document.getElementById("app");
 
   /* ---------- helpers ---------- */
@@ -28,7 +30,7 @@
             <h3>${esc(agent.name)}</h3>
             <p class="role">${esc(agent.role)}</p>
           </div>
-          <span class="dept-chip">${esc(agent.department)}</span>
+          <span class="dept-chip">${industryMeta(agent.industry).icon} ${esc(agent.industry)}</span>
         </div>
         <p class="agent-card__tagline">${esc(agent.tagline)}</p>
         <ul class="skill-tags">
@@ -47,59 +49,83 @@
   /* ---------- views ---------- */
   function viewHome() {
     const total = AGENTS.length;
-    const hired = Store.get().hired.length;
+    // Feature one agent from a few different industries for variety.
+    const featuredIds = ["aria-sales", "vera-scribe", "portia-contracts", "iris-seo", "brooks-mortgage", "hugo-travel"];
+    const featured = featuredIds.map(byId).filter(Boolean);
     return `
       <section class="hero">
         <div class="hero__inner">
-          <span class="badge">✨ Your AI workforce, ready to hire</span>
-          <h1>Hire AI employees that<br><span class="grad">work while you sleep.</span></h1>
-          <p class="hero__sub">Hire specialized AI agents — sales, support, content, data, engineering and more. Give them a goal and they work <em>autonomously</em>: deciding, acting, and logging every step.</p>
+          <span class="badge">✨ A marketplace of AI specialists</span>
+          <h1>Hire AI employees<br><span class="grad">for any role, any industry.</span></h1>
+          <p class="hero__sub">Browse ${total} specialized AI agents across ${INDUSTRIES.length} industries — healthcare, legal, finance, real estate, marketing and more. Give one a goal and it works <em>autonomously</em>: deciding, acting, and logging every step.</p>
           <div class="hero__cta">
-            <a class="btn btn-primary btn-lg" href="#/agents">Browse agents</a>
+            <a class="btn btn-primary btn-lg" href="#/agents">Explore the marketplace</a>
             <a class="btn btn-ghost btn-lg" href="#/workspace">My workspace</a>
           </div>
           <div class="hero__stats">
             <div><strong>${total}</strong><span>Specialists</span></div>
-            <div><strong>${hired}</strong><span>On your team</span></div>
+            <div><strong>${INDUSTRIES.length}</strong><span>Industries</span></div>
             <div><strong>24/7</strong><span>Availability</span></div>
           </div>
         </div>
       </section>
 
       <section class="section">
-        <div class="section__head">
-          <h2>How it works</h2>
+        <div class="section__head"><h2>Explore by industry</h2><a class="link" href="#/agents">Browse all →</a></div>
+        <div class="industry-grid">
+          ${INDUSTRIES.map((ind) => {
+            const n = AGENTS.filter((a) => a.industry === ind.name).length;
+            return `
+              <a class="industry-tile" href="#/agents/${encodeURIComponent(ind.name)}" style="--accent:${ind.accent}">
+                <span class="industry-tile__icon">${ind.icon}</span>
+                <div class="industry-tile__body">
+                  <strong>${esc(ind.name)}</strong>
+                  <span class="muted small">${n} specialist${n === 1 ? "" : "s"}</span>
+                </div>
+              </a>`;
+          }).join("")}
         </div>
+      </section>
+
+      <section class="section">
+        <div class="section__head"><h2>How it works</h2></div>
         <div class="grid grid-3">
-          <div class="card feature"><div class="feature__icon">✅</div><h3>1. Hire</h3><p>Add specialized AI agents to your workspace with a single click.</p></div>
+          <div class="card feature"><div class="feature__icon">✅</div><h3>1. Hire</h3><p>Add specialists from any industry to your workspace with one click.</p></div>
           <div class="card feature"><div class="feature__icon">🎯</div><h3>2. Assign a goal</h3><p>Give an agent a mission. It plans, decides, and acts on its own.</p></div>
           <div class="card feature"><div class="feature__icon">📋</div><h3>3. Review the work</h3><p>Watch every decision and action land in your operations dashboard.</p></div>
         </div>
       </section>
 
       <section class="section">
-        <div class="section__head">
-          <h2>Featured agents</h2>
-          <a class="link" href="#/agents">See all →</a>
-        </div>
+        <div class="section__head"><h2>Featured specialists</h2><a class="link" href="#/agents">See all →</a></div>
         <div class="grid grid-3">
-          ${AGENTS.slice(0, 3).map(agentCard).join("")}
+          ${featured.map(agentCard).join("")}
         </div>
       </section>`;
   }
 
-  function viewAgents() {
-    const depts = ["All"].concat(Array.from(new Set(AGENTS.map((a) => a.department))));
+  function viewAgents(param) {
+    const active = param ? decodeURIComponent(param) : "All";
+    const industries = ["All"].concat(INDUSTRIES.map((i) => i.name));
     return `
       <section class="section">
         <div class="section__head">
-          <h2>Agent directory</h2>
-          <div class="filters" id="dept-filters">
-            ${depts.map((d, i) => `<button class="chip ${i === 0 ? "active" : ""}" data-dept="${esc(d)}">${esc(d)}</button>`).join("")}
-          </div>
+          <h2>Marketplace</h2>
+          <span class="muted" id="result-count">${AGENTS.length} specialists</span>
         </div>
-        <div class="grid grid-3" id="agent-grid">
-          ${AGENTS.map(agentCard).join("")}
+        <div class="market-search">
+          <span class="market-search__icon">🔍</span>
+          <input type="text" id="agent-search" placeholder="Search by name, role, industry, or skill…" aria-label="Search agents" />
+        </div>
+        <div class="filters" id="industry-filters">
+          ${industries.map((name) => {
+            const meta = name === "All" ? { icon: "✨" } : industryMeta(name);
+            return `<button class="chip ${name === active ? "active" : ""}" data-industry="${esc(name)}">${meta.icon} ${esc(name)}</button>`;
+          }).join("")}
+        </div>
+        <div class="grid grid-3" id="agent-grid"></div>
+        <div class="empty card" id="no-results" style="display:none">
+          <div class="empty__icon">🔍</div><h3>No specialists match</h3><p>Try a different industry or search term.</p>
         </div>
       </section>`;
   }
@@ -117,7 +143,8 @@
               ${avatarEl(agent, 84)}
               <div>
                 <h1>${esc(agent.name)}</h1>
-                <p class="role">${esc(agent.role)} · ${esc(agent.department)}</p>
+                <p class="role">${esc(agent.role)}</p>
+                <p class="muted small"><a class="link" href="#/agents/${encodeURIComponent(agent.industry)}">${industryMeta(agent.industry).icon} ${esc(agent.industry)}</a></p>
                 <p class="agent-card__tagline">${esc(agent.tagline)}</p>
               </div>
             </div>
@@ -484,7 +511,7 @@
     let html;
     switch (page) {
       case "": html = viewHome(); break;
-      case "agents": html = viewAgents(); break;
+      case "agents": html = viewAgents(param); break;
       case "agent": html = viewAgent(param); break;
       case "workspace": html = viewWorkspace(); break;
       case "chat": html = viewChat(param); break;
@@ -515,7 +542,7 @@
     document.querySelectorAll(".nav-link").forEach((el) => {
       const href = el.getAttribute("href");
       el.classList.toggle("active", href === hash ||
-        (href === "#/agents" && hash.startsWith("#/agent") && !hash.startsWith("#/agents")) ||
+        (href === "#/agents" && (hash.startsWith("#/agents") || hash.startsWith("#/agent/"))) ||
         (href === "#/missions" && hash.startsWith("#/mission")) ||
         (href === "#/ops" && hash.startsWith("#/ops")));
     });
@@ -532,7 +559,7 @@
       });
     });
 
-    if (page === "agents") setupFilters();
+    if (page === "agents") setupMarketplace(param);
     if (page === "chat") setupChat(byId(param));
     if (page === "settings") setupSettings();
     if (page === "agent") setupAssign(byId(param));
@@ -622,28 +649,53 @@
     );
   }
 
-  function setupFilters() {
-    const filters = document.getElementById("dept-filters");
+  function setupMarketplace(param) {
+    const filters = document.getElementById("industry-filters");
     const grid = document.getElementById("agent-grid");
+    const search = document.getElementById("agent-search");
+    const count = document.getElementById("result-count");
+    const noResults = document.getElementById("no-results");
     if (!filters || !grid) return;
-    filters.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-dept]");
-      if (!btn) return;
-      filters.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
-      btn.classList.add("active");
-      const dept = btn.getAttribute("data-dept");
-      const list = dept === "All" ? AGENTS : AGENTS.filter((a) => a.department === dept);
+
+    let industry = param ? decodeURIComponent(param) : "All";
+    let query = "";
+
+    function matches(a) {
+      if (industry !== "All" && a.industry !== industry) return false;
+      if (!query) return true;
+      const hay = (a.name + " " + a.role + " " + a.industry + " " + a.department + " " + a.tagline + " " + a.skills.join(" ")).toLowerCase();
+      return hay.indexOf(query) !== -1;
+    }
+
+    function render() {
+      const list = AGENTS.filter(matches);
       grid.innerHTML = list.map(agentCard).join("");
-      // rebind hire buttons within the freshly rendered grid
+      if (count) count.textContent = list.length + " specialist" + (list.length === 1 ? "" : "s");
+      if (noResults) noResults.style.display = list.length ? "none" : "";
+      // bind hire buttons in the fresh grid
       grid.querySelectorAll("[data-hire]").forEach((b) =>
         b.addEventListener("click", (ev) => {
           ev.preventDefault();
           Store.toggleHire(b.getAttribute("data-hire"));
-          setupFilters(); // simplest: recompute (active chip persists via DOM)
-          btn.click();
+          render();
         })
       );
+    }
+
+    filters.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-industry]");
+      if (!btn) return;
+      filters.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
+      btn.classList.add("active");
+      industry = btn.getAttribute("data-industry");
+      render();
     });
+
+    if (search) {
+      search.addEventListener("input", () => { query = search.value.trim().toLowerCase(); render(); });
+    }
+
+    render();
   }
 
   function setupChat(agent) {
