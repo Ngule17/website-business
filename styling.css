@@ -31,14 +31,58 @@ body{
     cursor: pointer;
 } 
 
+.nav .nav-cta{
+    color: #00FFB8;
+    font-weight: bold;
+}
+
 /*Style jumbotron*/
 .jumbotron{
     background-color: transparent;
     color: #fff;
     text-align: center;
     margin: 0;
-    padding: 10px;
+    padding: 60px 10px 70px;
     letter-spacing: 2.5px;
+}
+
+.jumbotron h1{
+    font-size: 40px;
+    line-height: 1.25;
+    max-width: 800px;
+    margin: 0 auto 20px;
+}
+
+.jumbotron .lede{
+    font-size: 19px;
+    letter-spacing: 0.5px;
+    max-width: 640px;
+    margin: 0 auto 30px;
+    color: #eee;
+}
+
+.jumbotron .reassure,
+.reassure{
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    color: #ccc;
+    margin-top: 15px;
+}
+
+/*Section headings on dark background*/
+.section-title{
+    color: #fff;
+    text-align: center;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+}
+
+.section-sub{
+    color: #ddd;
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 35px;
+    font-size: 16px;
 }
 
 /*limit the width of the icons section*/
@@ -56,15 +100,15 @@ body{
 }
 
 .icons p{
-    font-size: 15px;   
-}
-/*Style contact button*/
-.contact{
-    text-align: center;
-    margin-top: 30px;
-    margin-bottom: 100px;
+    font-size: 15px;
 }
 
+.icons{
+    padding: 50px 0;
+    background: rgba(0,0,0,0.45);
+}
+
+/*Buttons*/
 .btn{
     background-color: rgba(0, 255, 184, 0.5);
     border: none;
@@ -73,12 +117,187 @@ body{
     font-size: 18px;
     padding: 10px 70px;
     letter-spacing: 1.3px;
+    white-space: normal;
 }
 
-.btn:hover{
-    background-color: rgba(0, 0, 0, 0.5); 
+.btn:hover,
+.btn:focus{
+    background-color: rgba(0, 0, 0, 0.5);
     color: #fff;
     border: none;
+}
+
+.btn-hero{
+    background-color: #00FFB8;
+    color: #063;
+    font-weight: bold;
+}
+
+.btn-hero:hover,
+.btn-hero:focus{
+    background-color: #00d99c;
+    color: #042;
+}
+
+/*Pricing section*/
+.pricing{
+    padding: 55px 0;
+    background: rgba(0,0,0,0.6);
+}
+
+.plan{
+    background: rgba(255,255,255,0.95);
+    color: #222;
+    border-radius: 10px;
+    padding: 30px 25px;
+    margin-bottom: 25px;
+    text-align: center;
+    position: relative;
+    min-height: 360px;
+}
+
+.plan-featured{
+    box-shadow: 0 0 0 3px #00FFB8;
+}
+
+.badge-popular{
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #00FFB8;
+    color: #063;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.plan h3{
+    margin-top: 5px;
+    letter-spacing: 1px;
+}
+
+.plan .price{
+    font-size: 30px;
+    font-weight: bold;
+    color: #063;
+    margin: 12px 0 18px;
+}
+
+.plan .price span{
+    font-size: 14px;
+    font-weight: normal;
+    color: #777;
+    display: block;
+    letter-spacing: 1px;
+}
+
+.plan ul{
+    list-style: none;
+    padding: 0;
+    margin: 0 0 22px;
+    text-align: left;
+    display: inline-block;
+}
+
+.plan ul li{
+    padding: 6px 0 6px 24px;
+    position: relative;
+    font-size: 15px;
+}
+
+.plan ul li:before{
+    content: "\2713";
+    color: #00b386;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.btn-plan{
+    padding: 9px 28px;
+    font-size: 15px;
+    background-color: #063;
+}
+
+.btn-plan:hover,
+.btn-plan:focus{
+    background-color: #042;
+}
+
+.btn-plan-featured{
+    background-color: #00b386;
+}
+
+/*Lead form section*/
+.quote{
+    padding: 55px 0;
+    background: rgba(0,0,0,0.45);
+}
+
+.lead-form{
+    max-width: 760px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.96);
+    color: #222;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.lead-form label{
+    font-size: 14px;
+    color: #333;
+}
+
+.lead-form .form-control{
+    margin-bottom: 5px;
+}
+
+.lead-form .btn-hero{
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.lead-form .reassure{
+    color: #777;
+    text-align: center;
+}
+
+.form-status{
+    text-align: center;
+    font-size: 15px;
+    margin-top: 15px;
+    min-height: 20px;
+}
+
+.form-status-error{ color: #c0392b; }
+.form-status-success{ color: #0a7a5a; font-weight: bold; }
+.form-status-pending{ color: #666; }
+
+/*FAQ section*/
+.faq{
+    padding: 55px 0;
+    background: rgba(0,0,0,0.6);
+}
+
+.faq-item{
+    max-width: 720px;
+    margin: 0 auto 22px;
+    color: #eee;
+}
+
+.faq-item h4{
+    color: #00FFB8;
+    letter-spacing: 0.5px;
+}
+
+.faq-item p{
+    font-size: 15px;
+    color: #ddd;
 }
 /*Style footer*/
 .footer{
@@ -90,6 +309,19 @@ body{
 /*use media queries to change icons size in small devices*/
 @media (max-width: 768px){
     .bodyimage{
-        height: 70px;   
+        height: 70px;
+    }
+    .jumbotron h1{
+        font-size: 28px;
+        letter-spacing: 1px;
+    }
+    .jumbotron .lede{
+        font-size: 16px;
+    }
+    .btn{
+        padding: 10px 40px;
+    }
+    .lead-form{
+        padding: 20px;
     }
 }

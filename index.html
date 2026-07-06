@@ -6,20 +6,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Company Website</title>
+    <title>Get a Website Built — Fixed Prices, No Sales Calls</title>
+    <meta name="description" content="Professional websites built to a fixed price and a fixed deadline. See the pricing, get an instant quote, and start online — no meetings, no pressure.">
+
+    <!-- Open Graph / social sharing -->
+    <meta property="og:title" content="Get a Website Built — Fixed Prices, No Sales Calls">
+    <meta property="og:description" content="Professional websites at a transparent fixed price. Pick a package, tell us what you need, and we start. No meetings required.">
+    <meta property="og:type" content="website">
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="styling.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
-
   </head>
   <body>
       <!--Create Nav bar-->
       <nav role="navigation" class="navbar navbar-inverse">
           <div class="container-fluid">
               <div class="navbar-header">
-                  <a class="navbar-brand" href="#"><img src="images/weblogo.png" class="logo"></a>
+                  <a class="navbar-brand" href="#top"><img src="images/weblogo.png" class="logo" alt="Logo"></a>
                   <button type="button" class="navbar-toggle" data-target="#navbarCollapse" data-toggle="collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
@@ -29,60 +34,207 @@
               </div>
               <div class="navbar-collapse collapse" id="navbarCollapse">
                   <ul class="nav navbar-nav">
-                      <li><a href="#">Home</a></li>
-                      <li><a href="#">About</a></li>
-                      <li><a href="#">Portfolio</a></li>
-                      <li><a href="#">Contact</a></li>
+                      <li><a href="#how">How it works</a></li>
+                      <li><a href="#pricing">Pricing</a></li>
+                      <li><a href="#faq">FAQ</a></li>
+                      <li><a href="#quote" class="nav-cta">Get a quote</a></li>
                   </ul>
               </div>
           </div>
       </nav>
-      
+
       <!--Create header-->
-      <div class="jumbotron">
+      <div class="jumbotron" id="top">
           <div class="container">
-              <h1>Looking to make an Awesome Website?</h1>
+              <h1>A professional website, at a price you can see up front.</h1>
+              <p class="lede">Pick a package, tell us what you need, and we start. Fixed price, fixed deadline &mdash; no meetings, no sales calls, no pressure.</p>
+              <a href="#quote" class="btn btn-hero">Get my instant quote</a>
+              <p class="reassure">Free &middot; No obligation &middot; Reply within 1 business day</p>
           </div>
       </div>
-      
-      <!--Create icons with text-->
-      <div class="icons">
+
+      <!--How it works-->
+      <div class="icons" id="how">
          <div class="container">
+            <h2 class="section-title">How it works</h2>
             <div class="row">
                <div class="col-md-4">
-                  <img src="images/money.png" class="bodyimage"> 
-                  <h2>Price it</h2>
-                  <p>Get in touch for an immediate no obligation quote!</p>
+                  <img src="images/money.png" class="bodyimage" alt="Price">
+                  <h3>1. Price it</h3>
+                  <p>Choose a package below. The price is on the page &mdash; you never wait for a quote or sit through a call.</p>
                </div>
                <div class="col-md-4">
-                  <img src="images/plan.png" class="bodyimage"> 
-                  <h2>Plan it</h2>
-                  <p>We will agree on a deadline and commit to it.</p>
+                  <img src="images/plan.png" class="bodyimage" alt="Plan">
+                  <h3>2. Plan it</h3>
+                  <p>Fill in the short form. We reply with a plan and a firm deadline, and commit to it.</p>
                </div>
                <div class="col-md-4">
-                  <img src="images/finish.png" class="bodyimage"> 
-                  <h2>Make it</h2>
-                  <p>We will deliver your website on time with the best quality.</p>
+                  <img src="images/finish.png" class="bodyimage" alt="Build">
+                  <h3>3. Make it</h3>
+                  <p>We build it and deliver on time. You approve, we launch. Simple.</p>
                </div>
             </div>
          </div>
       </div>
-      <--Create contact button-->
-      <div class="contact">
-          <div class="container">
-              <a href="#" class="btn">Get in touch</a>
+
+      <!--Pricing-->
+      <div class="pricing" id="pricing">
+        <div class="container">
+          <h2 class="section-title">Simple, honest pricing</h2>
+          <p class="section-sub">No hidden fees. No "book a call to find out." Prices are a starting point &mdash; your quote is confirmed before any work begins.</p>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="plan">
+                <h3>Starter</h3>
+                <p class="price"><span>from</span> $499</p>
+                <ul>
+                  <li>1&ndash;3 page website</li>
+                  <li>Mobile friendly</li>
+                  <li>Contact form</li>
+                  <li>Delivered in ~1 week</li>
+                </ul>
+                <a href="#quote" class="btn btn-plan" data-plan="Starter">Choose Starter</a>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="plan plan-featured">
+                <span class="badge-popular">Most popular</span>
+                <h3>Business</h3>
+                <p class="price"><span>from</span> $1,200</p>
+                <ul>
+                  <li>Up to 7 pages</li>
+                  <li>Custom design</li>
+                  <li>Contact &amp; enquiry forms</li>
+                  <li>Basic SEO setup</li>
+                  <li>Delivered in ~2 weeks</li>
+                </ul>
+                <a href="#quote" class="btn btn-plan btn-plan-featured" data-plan="Business">Choose Business</a>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="plan">
+                <h3>Custom</h3>
+                <p class="price">Let's scope it</p>
+                <ul>
+                  <li>E-commerce or web app</li>
+                  <li>Integrations &amp; automation</li>
+                  <li>Ongoing support option</li>
+                  <li>Timeline agreed up front</li>
+                </ul>
+                <a href="#quote" class="btn btn-plan" data-plan="Custom">Get a custom quote</a>
+              </div>
+            </div>
           </div>
+        </div>
       </div>
+
+      <!--Lead capture form-->
+      <div class="quote" id="quote">
+        <div class="container">
+          <h2 class="section-title">Get your instant quote</h2>
+          <p class="section-sub">Answer a few questions. You'll get a confirmation email straight away and a real reply within one business day.</p>
+
+          <form id="lead-form" class="lead-form" novalidate>
+            <!-- Web3Forms access key. Replace with your own key from https://web3forms.com (free). -->
+            <input type="hidden" name="access_key" value="YOUR-WEB3FORMS-ACCESS-KEY">
+            <input type="hidden" name="subject" value="New website lead from your site">
+            <input type="hidden" name="from_name" value="Website Lead Form">
+            <!-- Autoresponder: the prospect gets an instant reply, so no manual first-touch is needed. -->
+            <input type="hidden" name="redirect" value="false">
+            <!-- Honeypot spam trap (bots fill this; humans never see it) -->
+            <input type="checkbox" name="botcheck" class="hidden" style="display:none;" tabindex="-1" autocomplete="off">
+
+            <div class="row">
+              <div class="col-sm-6 form-group">
+                <label for="name">Your name *</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+              </div>
+              <div class="col-sm-6 form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6 form-group">
+                <label for="business">Business / project name</label>
+                <input type="text" id="business" name="business" class="form-control">
+              </div>
+              <div class="col-sm-6 form-group">
+                <label for="plan">Package you're interested in</label>
+                <select id="plan" name="plan" class="form-control">
+                  <option value="Not sure yet">Not sure yet</option>
+                  <option value="Starter">Starter (from $499)</option>
+                  <option value="Business">Business (from $1,200)</option>
+                  <option value="Custom">Custom</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6 form-group">
+                <label for="budget">Rough budget</label>
+                <select id="budget" name="budget" class="form-control">
+                  <option value="Under $500">Under $500</option>
+                  <option value="$500 – $1,500">$500 &ndash; $1,500</option>
+                  <option value="$1,500 – $5,000">$1,500 &ndash; $5,000</option>
+                  <option value="$5,000+">$5,000+</option>
+                  <option value="Not sure">Not sure</option>
+                </select>
+              </div>
+              <div class="col-sm-6 form-group">
+                <label for="timeline">When do you need it?</label>
+                <select id="timeline" name="timeline" class="form-control">
+                  <option value="ASAP">As soon as possible</option>
+                  <option value="Within a month">Within a month</option>
+                  <option value="1–3 months">1&ndash;3 months</option>
+                  <option value="Just exploring">Just exploring</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="message">What do you need? *</label>
+              <textarea id="message" name="message" class="form-control" rows="4" placeholder="A few sentences about your business and what the website should do." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-hero" id="lead-submit">Send &amp; get my quote</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+            <p class="reassure">We only use your details to reply to this enquiry. No spam, ever.</p>
+          </form>
+        </div>
+      </div>
+
+      <!--FAQ-->
+      <div class="faq" id="faq">
+        <div class="container">
+          <h2 class="section-title">Common questions</h2>
+          <div class="faq-item">
+            <h4>Do I have to get on a call?</h4>
+            <p>No. Everything can be handled by email. The prices are on this page and the form tells us what we need to get started.</p>
+          </div>
+          <div class="faq-item">
+            <h4>Is the price fixed?</h4>
+            <p>The listed prices are a starting point. We confirm a fixed quote in writing before any work begins, so there are no surprises.</p>
+          </div>
+          <div class="faq-item">
+            <h4>How fast will I hear back?</h4>
+            <p>You get an automatic confirmation the moment you submit, and a real reply within one business day.</p>
+          </div>
+        </div>
+      </div>
+
       <!--Create Footer-->
       <div class="footer">
           <div class="container">
-              <p>&copy; steven ngule.</p>
+              <p>&copy; Steven Ngule. Built to a deadline, priced without the guesswork.</p>
           </div>
       </div>
-      
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/leadform.js"></script>
   </body>
 </html>
