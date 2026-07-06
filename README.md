@@ -1,51 +1,59 @@
-# Automated lead generation website
+# Spotlight Home Services — automated lead generation
 
-A static landing page that turns visitors into qualified leads **without any manual sales work**. There is no server to run and no database to maintain — the whole pipeline works on plain static hosting (GitHub Pages, Netlify, Cloudflare Pages, etc.).
+A static two-sided lead-generation site for home services (cleaning, lawn care, pressure washing, plumbing, HVAC, electrical, handyman). It captures leads **without any manual sales work** and runs on free static hosting — no server, no database.
 
-## How it removes manual selling
+## The model (two funnels, one site)
 
-The site is designed so a stranger can go from "just looking" to "booked lead" on their own:
+**Homeowner side (`#quote`)** — a homeowner picks a service, describes the job, and leaves name/phone/email. Every submission is a qualified job request with contact details. You can:
+- fulfill the job with your own crew, or
+- sell/route it to a local pro (exclusive leads in these trades typically sell for $15–$100+ depending on trade and ticket size).
 
-1. **Transparent pricing** (`#pricing`) — the packages and starting prices are on the page, so nobody has to get on a call just to find out what it costs. This is the single biggest thing that removes "manual sales."
-2. **Self-qualifying form** (`#quote`) — the form asks for budget, timeline, and package interest, so every lead arrives already qualified. You reply to good-fit leads and skip the rest.
-3. **Instant auto-reply** — the moment someone submits, they get a confirmation email automatically (via the form backend's autoresponder). No first-touch effort from you.
-4. **Owner notification** — every submission is emailed straight to you, so you just reply when a good lead lands in your inbox.
+**Pro side (`#pros`)** — home services businesses sign up to receive leads in their area. This builds the buyer list for the leads the homeowner side generates. Pay-per-lead, no subscription — an easy yes for a small contractor.
+
+Both funnels are automated:
+1. Instant auto-confirmation email to the person who submitted (via the form backend's autoresponder).
+2. Every submission emailed to you, tagged **HOMEOWNER lead** or **PRO signup** in the subject line so you can sort at a glance.
+3. Client-side validation and a honeypot spam trap keep junk out.
+
+Your only manual step is matching: forward the homeowner's job to a pro on your list (or quote it yourself).
 
 ## One-time setup (about 3 minutes)
 
-The form uses [Web3Forms](https://web3forms.com) — a free service that emails form submissions to you. It needs no account backend beyond an access key.
+The forms use [Web3Forms](https://web3forms.com) — a free service that emails submissions to you.
 
 1. Go to <https://web3forms.com>, enter your email (`spotlightcommunicationz@gmail.com`), and copy the **Access Key** they send you.
-2. In `index.html`, find this line and paste your key in place of the placeholder:
+2. In `index.html`, replace **both** occurrences of the placeholder (one per form):
    ```html
    <input type="hidden" name="access_key" value="YOUR-WEB3FORMS-ACCESS-KEY">
    ```
-3. (Optional) Turn on the **autoresponder** in your Web3Forms dashboard so prospects get an instant branded confirmation email.
+3. (Optional) Turn on the **autoresponder** in the Web3Forms dashboard so submitters get an instant branded confirmation.
 
-That's it. Until the key is added, the form shows a friendly "not connected yet" message instead of failing silently.
+Until the key is added, the forms show a friendly "not connected yet" message instead of failing silently.
 
 ## Deploying
 
-It's static files, so any static host works. Fastest option — GitHub Pages:
+Static files — any host works. Fastest option, GitHub Pages:
 
-1. Push this repo to GitHub.
-2. Repo **Settings → Pages → Build and deployment → Deploy from a branch**, pick your branch, root folder.
-3. Your site is live at `https://<username>.github.io/<repo>/`.
+1. Repo **Settings → Pages → Build and deployment → Deploy from a branch**, pick your branch, root folder.
+2. Live at `https://<username>.github.io/<repo>/`.
 
-## Getting traffic (the other half of "leads without sales")
+## Getting traffic
 
-The site converts traffic; it doesn't create it. Cheap, low-effort channels that pair well with a fixed-price service:
+The site converts visitors; you still need visitors. The channels that work for local home services:
 
-- **Google Business Profile** + a few local directories — free, and ranks for "web designer near me".
-- **Basic SEO** — the page already has a title and meta description; add a real portfolio and location text.
-- **A simple Google Ads campaign** pointed at `#quote` — because pricing is public, the ad can pre-qualify clicks.
+- **Google Business Profile** — free and the single highest-intent channel for "house cleaning near me" searches.
+- **Local SEO** — add your city/metro name to the page title, hero, and copy once you pick a launch market. One page per city scales this ("rank and rent" style).
+- **Google Local Services / Ads** — pointed at `#quote`; the service cards pre-qualify clicks.
+- **Nextdoor & local Facebook groups** — free demand for cleaning/lawn/pressure-washing requests.
+
+Start with **one metro and 2–3 trades**, prove lead flow, then widen.
 
 ## Files
 
 | File | Purpose |
 |------|---------|
-| `index.html` | Landing page: hero, how-it-works, pricing, lead form, FAQ |
-| `styling.css` | Styles for all sections |
-| `js/leadform.js` | Form validation, submission, spam trap, inline success/error |
+| `index.html` | Landing page: hero, service grid, how-it-works, homeowner form, pro signup, FAQ |
+| `styling.css` | Full visual design (pine green / paper / amber palette) |
+| `js/leadform.js` | Validation, submission, spam trap, inline status — wired to both forms |
 | `css/`, `js/`, `fonts/` | Bootstrap 3 assets |
-| `images/` | Logo and section icons |
+| `images/` | Legacy logo and icons (no longer referenced) |

@@ -1,269 +1,277 @@
-/*styling.css*/
-/*Style body by adding background image and set it to cover, add font-family*/
+/*styling.css — Spotlight Home Services*/
+
+/* Palette:
+   ink      #22332C  (green-biased near-black text)
+   paper    #F6F4EE  (warm off-white ground)
+   pine     #14524A  (brand green: hero, pros band, footer)
+   pine-mid #0E6B5C  (links, checks, accents)
+   amber    #F0A93B  (call-to-action)
+*/
+
 body{
-    font-family: sans-serif, serif;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.47), rgba(0,0,0,0.7)), url(css/code.jpg);
-    background-attachment: fixed;
-    background-size: cover;
-	
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #F6F4EE;
+    color: #22332C;
 }
 
-/*Style brand*/
-.logo{
-    height: 30px;   
+h1, h2, h3, .navbar-brand{
+    font-family: Georgia, "Times New Roman", serif;
 }
 
-/*Style navigation bar*/
-.navbar-inverse{
-    background: rgba(0,0,0,0.5);   
+/*Navigation bar*/
+.navbar-spotlight{
+    background: #14524A;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
 }
 
-.nav li{
+.navbar-default.navbar-spotlight .navbar-brand,
+.navbar-default.navbar-spotlight .navbar-brand:hover,
+.navbar-default.navbar-spotlight .navbar-brand:focus{
     color: #fff;
-    font-size: 17px;
-    margin-right: 35px;
-    padding: 10px 0;
-}  
+    font-size: 22px;
+    letter-spacing: 0.5px;
+}
 
-.nav li:hover{
-    border-bottom: 1px solid #00FFB8; 
-    padding-bottom: 9px;
-    cursor: pointer;
-} 
+.navbar-spotlight .navbar-brand span{
+    color: #F0A93B;
+}
 
-.nav .nav-cta{
-    color: #00FFB8;
+.navbar-spotlight .nav li a{
+    color: #E9F0EC;
+    font-size: 15px;
+}
+
+.navbar-spotlight .nav li a:hover,
+.navbar-spotlight .nav li a:focus{
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+}
+
+.navbar-spotlight .nav .nav-cta{
+    color: #F0A93B;
     font-weight: bold;
 }
 
-/*Style jumbotron*/
+.navbar-spotlight .navbar-toggle{
+    border-color: rgba(255,255,255,0.4);
+}
+
+.navbar-spotlight .navbar-toggle .icon-bar{
+    background-color: #fff;
+}
+
+/*Hero*/
 .jumbotron{
-    background-color: transparent;
+    background: #14524A;
     color: #fff;
     text-align: center;
     margin: 0;
-    padding: 60px 10px 70px;
-    letter-spacing: 2.5px;
+    padding: 65px 15px 70px;
 }
 
 .jumbotron h1{
-    font-size: 40px;
-    line-height: 1.25;
-    max-width: 800px;
-    margin: 0 auto 20px;
+    font-size: 42px;
+    line-height: 1.2;
+    max-width: 760px;
+    margin: 0 auto 22px;
 }
 
 .jumbotron .lede{
     font-size: 19px;
-    letter-spacing: 0.5px;
-    max-width: 640px;
-    margin: 0 auto 30px;
-    color: #eee;
+    line-height: 1.55;
+    max-width: 620px;
+    margin: 0 auto 32px;
+    color: #DCE9E2;
 }
 
-.jumbotron .reassure,
 .reassure{
     font-size: 13px;
-    letter-spacing: 0.5px;
-    color: #ccc;
+    letter-spacing: 0.4px;
+    color: #A9C4B8;
     margin-top: 15px;
 }
 
-/*Section headings on dark background*/
+/*Section headings*/
 .section-title{
-    color: #fff;
     text-align: center;
-    letter-spacing: 1.5px;
-    margin-bottom: 10px;
+    font-size: 32px;
+    color: #22332C;
+    margin: 0 0 12px;
 }
 
 .section-sub{
-    color: #ddd;
     text-align: center;
+    color: #5A6B61;
     max-width: 640px;
-    margin: 0 auto 35px;
+    margin: 0 auto 40px;
     font-size: 16px;
+    line-height: 1.6;
 }
 
-/*limit the width of the icons section*/
 .container{
-    max-width: 1000px;   
-}
-/*Style icons section using bootstrap grid system*/
-.bodyimage{
-    height: 100px;   
-}
-
-.col-md-4{
-    text-align: center;
-    color: #fff;
-}
-
-.icons p{
-    font-size: 15px;
-}
-
-.icons{
-    padding: 50px 0;
-    background: rgba(0,0,0,0.45);
+    max-width: 1000px;
 }
 
 /*Buttons*/
 .btn{
-    background-color: rgba(0, 255, 184, 0.5);
     border: none;
-    border-radius: 10px;
-    color: #fff;
+    border-radius: 6px;
     font-size: 18px;
-    padding: 10px 70px;
-    letter-spacing: 1.3px;
+    padding: 12px 45px;
+    letter-spacing: 0.3px;
     white-space: normal;
 }
 
-.btn:hover,
-.btn:focus{
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    border: none;
-}
-
 .btn-hero{
-    background-color: #00FFB8;
-    color: #063;
+    background-color: #F0A93B;
+    color: #3A2A0A;
     font-weight: bold;
 }
 
 .btn-hero:hover,
 .btn-hero:focus{
-    background-color: #00d99c;
-    color: #042;
+    background-color: #E0952A;
+    color: #2A1E06;
 }
 
-/*Pricing section*/
-.pricing{
-    padding: 55px 0;
-    background: rgba(0,0,0,0.6);
-}
-
-.plan{
-    background: rgba(255,255,255,0.95);
-    color: #222;
-    border-radius: 10px;
-    padding: 30px 25px;
-    margin-bottom: 25px;
-    text-align: center;
-    position: relative;
-    min-height: 360px;
-}
-
-.plan-featured{
-    box-shadow: 0 0 0 3px #00FFB8;
-}
-
-.badge-popular{
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #00FFB8;
-    color: #063;
-    font-size: 12px;
+.btn-pro{
+    background-color: #fff;
+    color: #14524A;
     font-weight: bold;
-    letter-spacing: 1px;
-    padding: 4px 14px;
-    border-radius: 20px;
-    text-transform: uppercase;
 }
 
-.plan h3{
-    margin-top: 5px;
-    letter-spacing: 1px;
+.btn-pro:hover,
+.btn-pro:focus{
+    background-color: #E9F0EC;
+    color: #0E3B35;
 }
 
-.plan .price{
-    font-size: 30px;
-    font-weight: bold;
-    color: #063;
-    margin: 12px 0 18px;
-}
-
-.plan .price span{
-    font-size: 14px;
-    font-weight: normal;
-    color: #777;
-    display: block;
-    letter-spacing: 1px;
-}
-
-.plan ul{
-    list-style: none;
-    padding: 0;
-    margin: 0 0 22px;
-    text-align: left;
-    display: inline-block;
-}
-
-.plan ul li{
-    padding: 6px 0 6px 24px;
-    position: relative;
-    font-size: 15px;
-}
-
-.plan ul li:before{
-    content: "\2713";
-    color: #00b386;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-}
-
-.btn-plan{
-    padding: 9px 28px;
-    font-size: 15px;
-    background-color: #063;
-}
-
-.btn-plan:hover,
-.btn-plan:focus{
-    background-color: #042;
-}
-
-.btn-plan-featured{
-    background-color: #00b386;
-}
-
-/*Lead form section*/
-.quote{
-    padding: 55px 0;
-    background: rgba(0,0,0,0.45);
-}
-
-.lead-form{
-    max-width: 760px;
-    margin: 0 auto;
-    background: rgba(255,255,255,0.96);
-    color: #222;
-    padding: 30px;
-    border-radius: 10px;
-}
-
-.lead-form label{
-    font-size: 14px;
-    color: #333;
-}
-
-.lead-form .form-control{
-    margin-bottom: 5px;
-}
-
-.lead-form .btn-hero{
+.btn-block-form{
     display: block;
     width: 100%;
     margin-top: 10px;
 }
 
+/*Services grid*/
+.services{
+    padding: 60px 0 45px;
+}
+
+.service-row{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.service-card{
+    display: block;
+    background: #fff;
+    border: 1px solid #E3DFD3;
+    border-radius: 10px;
+    padding: 22px 18px;
+    margin-bottom: 20px;
+    color: #22332C;
+    text-decoration: none;
+    height: 92%;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.service-card:hover,
+.service-card:focus{
+    text-decoration: none;
+    color: #22332C;
+    border-color: #0E6B5C;
+    box-shadow: 0 3px 12px rgba(20, 82, 74, 0.15);
+}
+
+.service-emoji{
+    font-size: 26px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.service-card h3{
+    font-size: 18px;
+    margin: 0 0 6px;
+}
+
+.service-card p{
+    font-size: 13.5px;
+    color: #5A6B61;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/*How it works*/
+.how{
+    padding: 55px 0 60px;
+    background: #EFEAE0;
+}
+
+.step{
+    text-align: center;
+    padding-top: 10px;
+}
+
+.step-num{
+    display: inline-block;
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    border-radius: 50%;
+    background: #14524A;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 14px;
+}
+
+.step h3{
+    font-size: 20px;
+    margin: 0 0 10px;
+}
+
+.step p{
+    font-size: 15px;
+    color: #5A6B61;
+    line-height: 1.6;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+/*Lead form sections*/
+.quote{
+    padding: 60px 0;
+}
+
+.lead-form{
+    max-width: 760px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #E3DFD3;
+    border-radius: 10px;
+    padding: 32px;
+}
+
+.lead-form label{
+    font-size: 14px;
+    color: #33443B;
+}
+
+.lead-form .form-control{
+    margin-bottom: 5px;
+    border-color: #D5D0C2;
+    box-shadow: none;
+}
+
+.lead-form .form-control:focus{
+    border-color: #0E6B5C;
+    box-shadow: 0 0 0 2px rgba(14, 107, 92, 0.15);
+}
+
 .lead-form .reassure{
-    color: #777;
+    color: #8A968D;
     text-align: center;
 }
 
@@ -274,54 +282,101 @@ body{
     min-height: 20px;
 }
 
-.form-status-error{ color: #c0392b; }
-.form-status-success{ color: #0a7a5a; font-weight: bold; }
-.form-status-pending{ color: #666; }
+.form-status-error{ color: #B3402A; }
+.form-status-success{ color: #0E6B5C; font-weight: bold; }
+.form-status-pending{ color: #5A6B61; }
 
-/*FAQ section*/
+/*For pros band*/
+.pros{
+    background: #14524A;
+    color: #fff;
+    padding: 60px 0;
+}
+
+.pros .section-title{
+    color: #fff;
+}
+
+.pros .section-sub{
+    color: #C9DCD2;
+}
+
+.pro-points{
+    max-width: 900px;
+    margin: 0 auto 35px;
+    text-align: center;
+}
+
+.pro-points h4{
+    color: #F0A93B;
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+.pro-points p{
+    color: #C9DCD2;
+    font-size: 14.5px;
+    line-height: 1.6;
+    max-width: 270px;
+    margin: 0 auto 20px;
+}
+
+.pro-form{
+    border: none;
+}
+
+/*FAQ*/
 .faq{
-    padding: 55px 0;
-    background: rgba(0,0,0,0.6);
+    padding: 55px 0 40px;
 }
 
 .faq-item{
-    max-width: 720px;
-    margin: 0 auto 22px;
-    color: #eee;
+    margin-bottom: 28px;
 }
 
 .faq-item h4{
-    color: #00FFB8;
-    letter-spacing: 0.5px;
+    color: #14524A;
+    font-size: 17px;
+    margin-bottom: 8px;
 }
 
 .faq-item p{
-    font-size: 15px;
-    color: #ddd;
+    font-size: 14.5px;
+    color: #5A6B61;
+    line-height: 1.6;
 }
-/*Style footer*/
+
+/*Footer*/
 .footer{
-    background-color: rgba(0, 0, 0, 0.5); 
-    color: grey;
-    font-size: 15px;
-    padding: 10px 0;
+    background: #0F3B35;
+    color: #A9C4B8;
+    font-size: 14px;
+    padding: 18px 0;
+    text-align: center;
 }
-/*use media queries to change icons size in small devices*/
+
+.footer a{
+    color: #DCE9E2;
+}
+
+/*Small screens*/
 @media (max-width: 768px){
-    .bodyimage{
-        height: 70px;
-    }
     .jumbotron h1{
-        font-size: 28px;
-        letter-spacing: 1px;
+        font-size: 30px;
     }
     .jumbotron .lede{
         font-size: 16px;
     }
+    .section-title{
+        font-size: 26px;
+    }
     .btn{
-        padding: 10px 40px;
+        padding: 12px 30px;
     }
     .lead-form{
         padding: 20px;
+    }
+    .service-card{
+        padding: 16px 12px;
     }
 }

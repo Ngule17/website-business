@@ -6,25 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Get a Website Built — Fixed Prices, No Sales Calls</title>
-    <meta name="description" content="Professional websites built to a fixed price and a fixed deadline. See the pricing, get an instant quote, and start online — no meetings, no pressure.">
+    <title>Spotlight Home Services — Free Quotes From Trusted Local Pros</title>
+    <meta name="description" content="Tell us the job — cleaning, lawn care, pressure washing, plumbing, HVAC and more — and get free quotes from trusted local pros. No calls, no pressure.">
 
     <!-- Open Graph / social sharing -->
-    <meta property="og:title" content="Get a Website Built — Fixed Prices, No Sales Calls">
-    <meta property="og:description" content="Professional websites at a transparent fixed price. Pick a package, tell us what you need, and we start. No meetings required.">
+    <meta property="og:title" content="Spotlight Home Services — Free Quotes From Trusted Local Pros">
+    <meta property="og:description" content="Describe your home project in 2 minutes and get matched with a trusted local pro. Free for homeowners.">
     <meta property="og:type" content="website">
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="styling.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
   </head>
   <body>
       <!--Create Nav bar-->
-      <nav role="navigation" class="navbar navbar-inverse">
+      <nav role="navigation" class="navbar navbar-default navbar-spotlight">
           <div class="container-fluid">
               <div class="navbar-header">
-                  <a class="navbar-brand" href="#top"><img src="images/weblogo.png" class="logo" alt="Logo"></a>
+                  <a class="navbar-brand" href="#top">Spotlight<span> Home Services</span></a>
                   <button type="button" class="navbar-toggle" data-target="#navbarCollapse" data-toggle="collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
@@ -34,10 +33,10 @@
               </div>
               <div class="navbar-collapse collapse" id="navbarCollapse">
                   <ul class="nav navbar-nav">
+                      <li><a href="#services">Services</a></li>
                       <li><a href="#how">How it works</a></li>
-                      <li><a href="#pricing">Pricing</a></li>
-                      <li><a href="#faq">FAQ</a></li>
-                      <li><a href="#quote" class="nav-cta">Get a quote</a></li>
+                      <li><a href="#pros">For pros</a></li>
+                      <li><a href="#quote" class="nav-cta">Get free quotes</a></li>
                   </ul>
               </div>
           </div>
@@ -46,161 +45,202 @@
       <!--Create header-->
       <div class="jumbotron" id="top">
           <div class="container">
-              <h1>A professional website, at a price you can see up front.</h1>
-              <p class="lede">Pick a package, tell us what you need, and we start. Fixed price, fixed deadline &mdash; no meetings, no sales calls, no pressure.</p>
-              <a href="#quote" class="btn btn-hero">Get my instant quote</a>
-              <p class="reassure">Free &middot; No obligation &middot; Reply within 1 business day</p>
+              <h1>Home repairs and upkeep, handled by trusted local pros.</h1>
+              <p class="lede">Tell us the job in two minutes. We match you with a vetted local pro who quotes it &mdash; no phone tag, no salespeople, no obligation.</p>
+              <a href="#quote" class="btn btn-hero">Get my free quotes</a>
+              <p class="reassure">Free for homeowners &middot; No obligation &middot; Response within 1 business day</p>
           </div>
       </div>
 
+      <!--Services-->
+      <div class="services" id="services">
+        <div class="container">
+          <h2 class="section-title">What do you need done?</h2>
+          <p class="section-sub">Pick a service to start your request &mdash; or choose "Something else" and describe the job.</p>
+          <div class="row service-row">
+            <div class="col-sm-4 col-xs-6"><a href="#quote" class="service-card" data-service="House cleaning"><span class="service-emoji">🧹</span><h3>House cleaning</h3><p>One-time, recurring, or move-out deep cleans.</p></a></div>
+            <div class="col-sm-4 col-xs-6"><a href="#quote" class="service-card" data-service="Lawn care & landscaping"><span class="service-emoji">🌿</span><h3>Lawn &amp; landscaping</h3><p>Mowing, yard cleanup, planting, and upkeep plans.</p></a></div>
+            <div class="col-sm-4 col-xs-6"><a href="#quote" class="service-card" data-service="Pressure washing"><span class="service-emoji">💦</span><h3>Pressure washing</h3><p>Driveways, siding, decks, and patios made new.</p></a></div>
+            <div class="col-sm-4 col-xs-6"><a href="#quote" class="service-card" data-service="Gutter & window cleaning"><span class="service-emoji">🪟</span><h3>Gutters &amp; windows</h3><p>Gutter clearing and streak-free window washing.</p></a></div>
+            <div class="col-sm-4 col-xs-6"><a href="#quote" class="service-card" data-service="Plumbing"><span class="service-emoji">🔧</span><h3>Plumbing</h3><p>Leaks, clogs, water heaters, and installs.</p></a></div>
+            <div class="col-sm-4 col-xs-6"><a href="#quote" class="service-card" data-service="HVAC (heating & cooling)"><span class="service-emoji">❄️</span><h3>Heating &amp; cooling</h3><p>AC and furnace repair, service, and replacement.</p></a></div>
+            <div class="col-sm-4 col-xs-6"><a href="#quote" class="service-card" data-service="Electrical"><span class="service-emoji">💡</span><h3>Electrical</h3><p>Fixtures, outlets, panels, and safety checks.</p></a></div>
+            <div class="col-sm-4 col-xs-6"><a href="#quote" class="service-card" data-service="Handyman"><span class="service-emoji">🔨</span><h3>Handyman</h3><p>Repairs, mounting, assembly, and odd jobs.</p></a></div>
+            <div class="col-sm-4 col-xs-6"><a href="#quote" class="service-card" data-service="Something else"><span class="service-emoji">📝</span><h3>Something else</h3><p>Junk removal, painting, roofing &mdash; just describe it.</p></a></div>
+          </div>
+        </div>
+      </div>
+
       <!--How it works-->
-      <div class="icons" id="how">
+      <div class="how" id="how">
          <div class="container">
             <h2 class="section-title">How it works</h2>
             <div class="row">
-               <div class="col-md-4">
-                  <img src="images/money.png" class="bodyimage" alt="Price">
-                  <h3>1. Price it</h3>
-                  <p>Choose a package below. The price is on the page &mdash; you never wait for a quote or sit through a call.</p>
+               <div class="col-md-4 step">
+                  <span class="step-num">1</span>
+                  <h3>Describe the job</h3>
+                  <p>Pick the service, tell us where you are and what needs doing. Takes about two minutes.</p>
                </div>
-               <div class="col-md-4">
-                  <img src="images/plan.png" class="bodyimage" alt="Plan">
-                  <h3>2. Plan it</h3>
-                  <p>Fill in the short form. We reply with a plan and a firm deadline, and commit to it.</p>
+               <div class="col-md-4 step">
+                  <span class="step-num">2</span>
+                  <h3>Get matched &amp; quoted</h3>
+                  <p>We match your request with a trusted local pro, who sends you a quote &mdash; usually within one business day.</p>
                </div>
-               <div class="col-md-4">
-                  <img src="images/finish.png" class="bodyimage" alt="Build">
-                  <h3>3. Make it</h3>
-                  <p>We build it and deliver on time. You approve, we launch. Simple.</p>
+               <div class="col-md-4 step">
+                  <span class="step-num">3</span>
+                  <h3>Job done</h3>
+                  <p>Happy with the quote? Book it. Not happy? Walk away &mdash; it costs you nothing to ask.</p>
                </div>
             </div>
          </div>
       </div>
 
-      <!--Pricing-->
-      <div class="pricing" id="pricing">
-        <div class="container">
-          <h2 class="section-title">Simple, honest pricing</h2>
-          <p class="section-sub">No hidden fees. No "book a call to find out." Prices are a starting point &mdash; your quote is confirmed before any work begins.</p>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="plan">
-                <h3>Starter</h3>
-                <p class="price"><span>from</span> $499</p>
-                <ul>
-                  <li>1&ndash;3 page website</li>
-                  <li>Mobile friendly</li>
-                  <li>Contact form</li>
-                  <li>Delivered in ~1 week</li>
-                </ul>
-                <a href="#quote" class="btn btn-plan" data-plan="Starter">Choose Starter</a>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="plan plan-featured">
-                <span class="badge-popular">Most popular</span>
-                <h3>Business</h3>
-                <p class="price"><span>from</span> $1,200</p>
-                <ul>
-                  <li>Up to 7 pages</li>
-                  <li>Custom design</li>
-                  <li>Contact &amp; enquiry forms</li>
-                  <li>Basic SEO setup</li>
-                  <li>Delivered in ~2 weeks</li>
-                </ul>
-                <a href="#quote" class="btn btn-plan btn-plan-featured" data-plan="Business">Choose Business</a>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="plan">
-                <h3>Custom</h3>
-                <p class="price">Let's scope it</p>
-                <ul>
-                  <li>E-commerce or web app</li>
-                  <li>Integrations &amp; automation</li>
-                  <li>Ongoing support option</li>
-                  <li>Timeline agreed up front</li>
-                </ul>
-                <a href="#quote" class="btn btn-plan" data-plan="Custom">Get a custom quote</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!--Lead capture form-->
+      <!--Homeowner lead capture form-->
       <div class="quote" id="quote">
         <div class="container">
-          <h2 class="section-title">Get your instant quote</h2>
-          <p class="section-sub">Answer a few questions. You'll get a confirmation email straight away and a real reply within one business day.</p>
+          <h2 class="section-title">Get your free quotes</h2>
+          <p class="section-sub">The more detail you give, the more accurate your quote. Your details go only to the pro handling your request &mdash; never sold to spam lists.</p>
 
           <form id="lead-form" class="lead-form" novalidate>
             <!-- Web3Forms access key. Replace with your own key from https://web3forms.com (free). -->
             <input type="hidden" name="access_key" value="YOUR-WEB3FORMS-ACCESS-KEY">
-            <input type="hidden" name="subject" value="New website lead from your site">
-            <input type="hidden" name="from_name" value="Website Lead Form">
-            <!-- Autoresponder: the prospect gets an instant reply, so no manual first-touch is needed. -->
-            <input type="hidden" name="redirect" value="false">
-            <!-- Honeypot spam trap (bots fill this; humans never see it) -->
+            <input type="hidden" name="subject" value="New HOMEOWNER lead — Spotlight Home Services">
+            <input type="hidden" name="from_name" value="Homeowner Quote Form">
             <input type="checkbox" name="botcheck" class="hidden" style="display:none;" tabindex="-1" autocomplete="off">
 
             <div class="row">
               <div class="col-sm-6 form-group">
-                <label for="name">Your name *</label>
-                <input type="text" id="name" name="name" class="form-control" required>
+                <label for="service">Service needed *</label>
+                <select id="service" name="service" class="form-control" required>
+                  <option value="">Choose a service&hellip;</option>
+                  <option value="House cleaning">House cleaning</option>
+                  <option value="Lawn care & landscaping">Lawn care &amp; landscaping</option>
+                  <option value="Pressure washing">Pressure washing</option>
+                  <option value="Gutter & window cleaning">Gutter &amp; window cleaning</option>
+                  <option value="Plumbing">Plumbing</option>
+                  <option value="HVAC (heating & cooling)">HVAC (heating &amp; cooling)</option>
+                  <option value="Electrical">Electrical</option>
+                  <option value="Handyman">Handyman</option>
+                  <option value="Something else">Something else</option>
+                </select>
               </div>
               <div class="col-sm-6 form-group">
-                <label for="email">Email *</label>
-                <input type="email" id="email" name="email" class="form-control" required>
+                <label for="zip">ZIP code / area *</label>
+                <input type="text" id="zip" name="zip" class="form-control" placeholder="e.g. 30301" required>
               </div>
             </div>
 
             <div class="row">
               <div class="col-sm-6 form-group">
-                <label for="business">Business / project name</label>
-                <input type="text" id="business" name="business" class="form-control">
-              </div>
-              <div class="col-sm-6 form-group">
-                <label for="plan">Package you're interested in</label>
-                <select id="plan" name="plan" class="form-control">
-                  <option value="Not sure yet">Not sure yet</option>
-                  <option value="Starter">Starter (from $499)</option>
-                  <option value="Business">Business (from $1,200)</option>
-                  <option value="Custom">Custom</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-sm-6 form-group">
-                <label for="budget">Rough budget</label>
-                <select id="budget" name="budget" class="form-control">
-                  <option value="Under $500">Under $500</option>
-                  <option value="$500 – $1,500">$500 &ndash; $1,500</option>
-                  <option value="$1,500 – $5,000">$1,500 &ndash; $5,000</option>
-                  <option value="$5,000+">$5,000+</option>
-                  <option value="Not sure">Not sure</option>
-                </select>
-              </div>
-              <div class="col-sm-6 form-group">
-                <label for="timeline">When do you need it?</label>
-                <select id="timeline" name="timeline" class="form-control">
-                  <option value="ASAP">As soon as possible</option>
+                <label for="timing">When do you need it?</label>
+                <select id="timing" name="timing" class="form-control">
+                  <option value="As soon as possible">As soon as possible</option>
+                  <option value="Within a week">Within a week</option>
                   <option value="Within a month">Within a month</option>
-                  <option value="1–3 months">1&ndash;3 months</option>
-                  <option value="Just exploring">Just exploring</option>
+                  <option value="I'm flexible">I'm flexible</option>
+                </select>
+              </div>
+              <div class="col-sm-6 form-group">
+                <label for="property">Property type</label>
+                <select id="property" name="property" class="form-control">
+                  <option value="House">House</option>
+                  <option value="Apartment / condo">Apartment / condo</option>
+                  <option value="Rental property">Rental property</option>
+                  <option value="Business / commercial">Business / commercial</option>
                 </select>
               </div>
             </div>
 
             <div class="form-group">
-              <label for="message">What do you need? *</label>
-              <textarea id="message" name="message" class="form-control" rows="4" placeholder="A few sentences about your business and what the website should do." required></textarea>
+              <label for="details">Describe the job *</label>
+              <textarea id="details" name="details" class="form-control" rows="3" placeholder="e.g. 3-bed house, two bathrooms, need a deep clean before move-in on the 20th." required></textarea>
             </div>
 
-            <button type="submit" class="btn btn-hero" id="lead-submit">Send &amp; get my quote</button>
-            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
-            <p class="reassure">We only use your details to reply to this enquiry. No spam, ever.</p>
+            <div class="row">
+              <div class="col-sm-4 form-group">
+                <label for="name">Your name *</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+              </div>
+              <div class="col-sm-4 form-group">
+                <label for="phone">Phone *</label>
+                <input type="tel" id="phone" name="phone" class="form-control" required>
+              </div>
+              <div class="col-sm-4 form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-hero btn-block-form">Get my free quotes</button>
+            <p class="form-status" id="lead-status" role="status" aria-live="polite"></p>
+            <p class="reassure">Free &middot; no obligation &middot; your details are only used to quote this job.</p>
+          </form>
+        </div>
+      </div>
+
+      <!--For pros-->
+      <div class="pros" id="pros">
+        <div class="container">
+          <h2 class="section-title">Own a home services business? Get local leads.</h2>
+          <p class="section-sub">We send you exclusive job requests from homeowners in your service area &mdash; real jobs with names, phone numbers, and job details. You only take the ones you want.</p>
+
+          <div class="row pro-points">
+            <div class="col-md-4"><h4>Exclusive, not shared</h4><p>A lead goes to one pro, not blasted to five competitors who race to the phone.</p></div>
+            <div class="col-md-4"><h4>Pay per lead</h4><p>No subscription, no contract. Only pay for the leads you accept.</p></div>
+            <div class="col-md-4"><h4>Your area, your trade</h4><p>Tell us where you work and what you do &mdash; we only send matching jobs.</p></div>
+          </div>
+
+          <form id="pro-form" class="lead-form pro-form" novalidate>
+            <input type="hidden" name="access_key" value="YOUR-WEB3FORMS-ACCESS-KEY">
+            <input type="hidden" name="subject" value="New PRO signup — Spotlight Home Services">
+            <input type="hidden" name="from_name" value="Pro Signup Form">
+            <input type="checkbox" name="botcheck" class="hidden" style="display:none;" tabindex="-1" autocomplete="off">
+
+            <div class="row">
+              <div class="col-sm-6 form-group">
+                <label for="pro-business">Business name *</label>
+                <input type="text" id="pro-business" name="business" class="form-control" required>
+              </div>
+              <div class="col-sm-6 form-group">
+                <label for="pro-trade">Trade *</label>
+                <select id="pro-trade" name="trade" class="form-control" required>
+                  <option value="">Choose your trade&hellip;</option>
+                  <option value="Cleaning">Cleaning</option>
+                  <option value="Lawn care & landscaping">Lawn care &amp; landscaping</option>
+                  <option value="Pressure washing / exterior">Pressure washing / exterior</option>
+                  <option value="Plumbing">Plumbing</option>
+                  <option value="HVAC">HVAC</option>
+                  <option value="Electrical">Electrical</option>
+                  <option value="Handyman / general">Handyman / general</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6 form-group">
+                <label for="pro-area">Service area (city or ZIPs) *</label>
+                <input type="text" id="pro-area" name="area" class="form-control" placeholder="e.g. Atlanta metro, 30301–30310" required>
+              </div>
+              <div class="col-sm-6 form-group">
+                <label for="pro-phone">Phone *</label>
+                <input type="tel" id="pro-phone" name="phone" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6 form-group">
+                <label for="pro-name">Your name *</label>
+                <input type="text" id="pro-name" name="name" class="form-control" required>
+              </div>
+              <div class="col-sm-6 form-group">
+                <label for="pro-email">Email *</label>
+                <input type="email" id="pro-email" name="email" class="form-control" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-pro btn-block-form">Start getting leads</button>
+            <p class="form-status" id="pro-status" role="status" aria-live="polite"></p>
           </form>
         </div>
       </div>
@@ -209,17 +249,23 @@
       <div class="faq" id="faq">
         <div class="container">
           <h2 class="section-title">Common questions</h2>
-          <div class="faq-item">
-            <h4>Do I have to get on a call?</h4>
-            <p>No. Everything can be handled by email. The prices are on this page and the form tells us what we need to get started.</p>
-          </div>
-          <div class="faq-item">
-            <h4>Is the price fixed?</h4>
-            <p>The listed prices are a starting point. We confirm a fixed quote in writing before any work begins, so there are no surprises.</p>
-          </div>
-          <div class="faq-item">
-            <h4>How fast will I hear back?</h4>
-            <p>You get an automatic confirmation the moment you submit, and a real reply within one business day.</p>
+          <div class="row">
+            <div class="col-md-6 faq-item">
+              <h4>Does this cost me anything as a homeowner?</h4>
+              <p>No. Requesting quotes is free and there's no obligation to book. Pros pay a small fee for the lead &mdash; you never do.</p>
+            </div>
+            <div class="col-md-6 faq-item">
+              <h4>Will I get spam calls?</h4>
+              <p>No. Your request goes to one matched pro, not an open list. We never sell your details to marketing lists.</p>
+            </div>
+            <div class="col-md-6 faq-item">
+              <h4>How fast will I hear back?</h4>
+              <p>You get an automatic confirmation right away, and a quote from a matched pro usually within one business day.</p>
+            </div>
+            <div class="col-md-6 faq-item">
+              <h4>I'm a pro — what does a lead cost?</h4>
+              <p>It varies by trade and job size. Sign up above and we'll send current per-lead pricing for your area. No subscription, no minimum.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -227,7 +273,7 @@
       <!--Create Footer-->
       <div class="footer">
           <div class="container">
-              <p>&copy; Steven Ngule. Built to a deadline, priced without the guesswork.</p>
+              <p>&copy; Spotlight Home Services &middot; a Steven Ngule company &middot; <a href="#quote">Get quotes</a> &middot; <a href="#pros">For pros</a></p>
           </div>
       </div>
 
