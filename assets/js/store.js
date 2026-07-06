@@ -20,6 +20,7 @@
     leads: [], // {id, agentId, missionId, name, company, note, status, ts}
     tasks: [], // {id, agentId, missionId, title, priority, done, ts}
     escalations: [], // {id, agentId, missionId, reason, question, resolved, ts}
+    pendingActions: [], // approval-gated actions awaiting sign-off: {id, agentId, missionId, tool, input, ts}
     settings: {
       apiKey: "", // optional Anthropic API key (stored locally only)
       model: "claude-sonnet-5",
@@ -48,6 +49,7 @@
         leads: Array.isArray(p.leads) ? p.leads : base.leads,
         tasks: Array.isArray(p.tasks) ? p.tasks : base.tasks,
         escalations: Array.isArray(p.escalations) ? p.escalations : base.escalations,
+        pendingActions: Array.isArray(p.pendingActions) ? p.pendingActions : base.pendingActions,
         settings: Object.assign(base.settings, p.settings || {})
       };
     } catch (e) {
@@ -172,6 +174,9 @@
       state.escalations = state.escalations.map((e) => (e.id === eid ? Object.assign({}, e, { resolved: true }) : e));
       emit();
     },
+    addPendingAction(rec) { const pa = Object.assign({ id: id("pa"), ts: Date.now() }, rec); state.pendingActions = state.pendingActions.concat(pa); emit(); return pa; },
+    getPendingAction(paid) { return state.pendingActions.find((x) => x.id === paid) || null; },
+    removePendingAction(paid) { state.pendingActions = state.pendingActions.filter((x) => x.id !== paid); emit(); },
 
     /* ---- playbooks (reusable goal + agent) ---- */
     addPlaybook(rec) {
@@ -206,6 +211,7 @@
         leads: Array.isArray(incoming.leads) ? incoming.leads : base.leads,
         tasks: Array.isArray(incoming.tasks) ? incoming.tasks : base.tasks,
         escalations: Array.isArray(incoming.escalations) ? incoming.escalations : base.escalations,
+        pendingActions: Array.isArray(incoming.pendingActions) ? incoming.pendingActions : base.pendingActions,
         settings: Object.assign(base.settings, incoming.settings || {})
       };
       if (!state.settings.apiKey && keepKey) state.settings.apiKey = keepKey;
@@ -220,7 +226,8 @@
         outbox: state.outbox.length,
         leads: state.leads.length,
         tasks: state.tasks.filter((t) => !t.done).length,
-        escalations: state.escalations.filter((e) => !e.resolved).length
+        escalations: state.escalations.filter((e) => !e.resolved).length,
+        pending: state.pendingActions.length
       };
     }
   };

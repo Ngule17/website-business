@@ -367,10 +367,14 @@
           <label>Autonomous execution mode
             <select id="set-mode">
               <option value="simulate" ${s.executionMode === "simulate" ? "selected" : ""}>Simulate — safe, in-app actions only</option>
-              <option value="real" ${s.executionMode === "real" ? "selected" : ""}>Real — act on live systems (needs adapters)</option>
+              <option value="real" ${s.executionMode === "real" ? "selected" : ""}>Real — send actions to a webhook</option>
             </select>
           </label>
-          <p class="hint">With a key set, your agents reason live via the real Claude API. Without one, the app runs in demo mode. In <strong>Simulate</strong>, autonomous actions (emails, CRM, tasks) stay inside this app. <strong>Real</strong> mode routes actions to integration adapters you configure in <code>tools.js</code>; unconfigured actions safely fail and the agent escalates. Your key is sent only to Anthropic.</p>
+          <label>Webhook URL <span class="muted small">(real mode — POST each action to Zapier / Make / your API)</span>
+            <input type="url" id="set-webhook" value="${esc(s.webhookUrl)}" placeholder="https://hooks.zapier.com/…" />
+          </label>
+          <label class="check"><input type="checkbox" id="set-approvals" ${s.approvals ? "checked" : ""}> Require my approval before an agent sends an email or adds a lead</label>
+          <p class="hint">With a key set, your agents reason live via the real Claude API. In <strong>Simulate</strong>, actions (emails, CRM, tasks) stay inside this app. In <strong>Real</strong> mode each action is POSTed to your Webhook URL and mirrored to the workspace. With <strong>approval</strong> on, sending actions pause in the <a class="link" href="#/ops/approvals">Approvals</a> queue until you sign off. Your key is sent only to Anthropic.</p>
           <button class="btn btn-primary" id="save-settings">Save settings</button>
           <span class="saved-note" id="saved-note"></span>
         </div>
@@ -549,6 +553,7 @@
       ["outbox", "Outbox", s.outbox.length],
       ["crm", "CRM", s.leads.length],
       ["tasks", "Tasks", s.tasks.filter((t) => !t.done).length],
+      ["approvals", "Approvals", c.pending],
       ["escalations", "Human review", c.escalations]
     ];
     return `
@@ -583,6 +588,20 @@
           <span class="prio prio--${esc(t.priority || "medium")}">${esc(t.priority || "medium")}</span>
           <span class="muted small">${esc(agentName(t.agentId))}</span>
         </label>`).join("")}</div>`;
+    }
+    if (tab === "approvals") {
+      if (!s.pendingActions.length) return emptyPanel("✋", "Nothing to approve", "Turn on 'Require my approval' in Settings, and sending actions will pause here for your sign-off.");
+      return `<div class="op-list">${s.pendingActions.map((pa) => `
+        <div class="card esc-card">
+          <div class="esc-card__body">
+            <strong>${esc(TOOL_LABEL[pa.tool] || pa.tool)}</strong>
+            <p class="muted small">${esc(summarizeInput(pa.tool, pa.input))} · by ${esc(agentName(pa.agentId))}</p>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary small" data-approve="${pa.id}">Approve &amp; run</button>
+            <button class="btn btn-ghost small" data-reject="${pa.id}">Reject</button>
+          </div>
+        </div>`).join("")}</div>`;
     }
     if (tab === "escalations") {
       if (!s.escalations.length) return emptyPanel("🙋", "Nothing needs you", "When an agent hits a decision above its authority, it lands here.");
@@ -927,7 +946,7 @@
   function updateNav() {
     const hired = Store.get().hired.length;
     const c = Store.counts();
-    const badges = { "data-nav-count": hired, "data-nav-ops": c.escalations };
+    const badges = { "data-nav-count": hired, "data-nav-ops": c.escalations + c.pending };
     Object.keys(badges).forEach((attr) => {
       document.querySelectorAll("[" + attr + "]").forEach((el) => {
         const n = badges[attr];
@@ -1068,6 +1087,24 @@
     app.querySelectorAll("[data-resolve]").forEach((b) =>
       b.addEventListener("click", () => { Store.resolveEscalation(b.getAttribute("data-resolve")); route(); })
     );
+    app.querySelectorAll("[data-approve]").forEach((b) =>
+      b.addEventListener("click", async () => {
+        const pa = Store.getPendingAction(b.getAttribute("data-approve"));
+        if (!pa) return;
+        b.disabled = true; b.textContent = "Running…";
+        try {
+          await Tools.runApproved(pa.tool, pa.input, { agentId: pa.agentId, missionId: pa.missionId });
+          Store.removePendingAction(pa.id);
+          notify("Approved and ran: " + (TOOL_LABEL[pa.tool] || pa.tool), { icon: "✅", kind: "ok" });
+        } catch (e) {
+          notify("Action failed: " + (e.message || e), { icon: "⚠️", kind: "warn" });
+        }
+        route();
+      })
+    );
+    app.querySelectorAll("[data-reject]").forEach((b) =>
+      b.addEventListener("click", () => { Store.removePendingAction(b.getAttribute("data-reject")); route(); })
+    );
   }
 
   function setupMarketplace(param) {
@@ -1196,7 +1233,9 @@
         teamMemory: document.getElementById("set-memory").value.trim(),
         apiKey: document.getElementById("set-apikey").value.trim(),
         model: document.getElementById("set-model").value,
-        executionMode: document.getElementById("set-mode").value
+        executionMode: document.getElementById("set-mode").value,
+        webhookUrl: document.getElementById("set-webhook").value.trim(),
+        approvals: document.getElementById("set-approvals").checked
       });
       const note = document.getElementById("saved-note");
       note.textContent = "✓ Saved";
@@ -1259,10 +1298,16 @@
   }
 
   // Watch the store and toast on newly finished missions / new escalations.
-  let prev = { done: 0, escTotal: 0 };
+  let prev = { done: 0, escTotal: 0, pending: 0 };
   function watchEvents(state) {
     const done = state.missions.filter((m) => m.status === "done" || m.status === "failed").length;
     const escTotal = state.escalations.length;
+    const pending = state.pendingActions.length;
+    if (pending > prev.pending) {
+      const pa = state.pendingActions[state.pendingActions.length - 1];
+      if (pa) notify("Approval needed: " + (({ send_email: "send an email", add_lead: "add a lead" })[pa.tool] || pa.tool), { href: "#/ops/approvals", icon: "✋", kind: "warn" });
+    }
+    prev.pending = pending;
     if (done > prev.done) {
       const m = state.missions.filter((x) => x.status === "done" || x.status === "failed")
         .sort((a, b) => (b.finishedAt || 0) - (a.finishedAt || 0))[0];
@@ -1299,6 +1344,7 @@
   // Seed event baselines so we don't toast for pre-existing data on load.
   prev.done = Store.get().missions.filter((m) => m.status === "done" || m.status === "failed").length;
   prev.escTotal = Store.get().escalations.length;
+  prev.pending = Store.get().pendingActions.length;
   Store.subscribe(updateNav);
   Store.subscribe(watchEvents);
   setupTheme();

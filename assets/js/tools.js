@@ -17,18 +17,45 @@
 
   // ---- REAL integration seam ----------------------------------------------
   // Populate a function here (e.g. REAL_ADAPTERS.send_email = async (i)=>{...})
-  // and set settings.executionMode = "real" to have agents act on live systems.
+  // for a custom per-tool integration. The simplest path, though, is to set a
+  // Webhook URL in Settings: in "real" mode every action is POSTed there
+  // (tool, input, agent, mission) so you can wire it to Zapier/Make/n8n/your API.
   const REAL_ADAPTERS = {};
 
-  function realOrThrow(name, input) {
-    const fn = REAL_ADAPTERS[name];
-    if (!fn) {
-      throw new Error(
-        "No real-mode adapter is configured for '" + name + "'. " +
-        "Add one to REAL_ADAPTERS in tools.js, or switch execution back to Simulate in Settings."
-      );
+  // Actions that touch the outside world are gated behind approval when the
+  // "Require approval" setting is on.
+  const GATED = { send_email: true, add_lead: true };
+
+  async function runReal(name, input, ctx) {
+    const settings = Store.get().settings;
+    const url = settings.webhookUrl && settings.webhookUrl.trim();
+    if (url) {
+      // Fire-and-forget: text/plain + no-cors is a "simple request" (no CORS
+      // preflight), which is how browsers post to Zapier/Make/n8n webhooks.
+      // The response is opaque, so success = the request left the browser.
+      await fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "content-type": "text/plain;charset=UTF-8" },
+        body: JSON.stringify({ tool: name, input: input, agentId: ctx && ctx.agentId, missionId: ctx && ctx.missionId, ts: Date.now() })
+      });
+    } else if (REAL_ADAPTERS[name]) {
+      await REAL_ADAPTERS[name](input, ctx);
+    } else {
+      throw new Error("Real mode is on but no Webhook URL is set in Settings (and no adapter for '" + name + "').");
     }
-    return fn(input);
+    // Mirror the action into the workspace so there's a visible record of what
+    // was sent externally.
+    const tool = BY_NAME[name];
+    const local = tool && tool.simulate ? tool.simulate(input || {}, ctx || {}) : "done";
+    return "Sent via webhook ✓ — " + local;
+  }
+
+  // Run a tool through the configured backend (simulate or real), no gating.
+  async function runTool(name, input, ctx) {
+    const mode = Store.get().settings.executionMode || "simulate";
+    if (mode === "real") return await runReal(name, input, ctx);
+    return BY_NAME[name].simulate(input || {}, ctx || {});
   }
 
   const TOOLS = [
@@ -183,15 +210,21 @@
     },
     names() { return TOOLS.map((t) => t.name); },
     get(name) { return BY_NAME[name]; },
-    // Execute a tool, routing through the configured adapter.
+    isGated(name) { return !!GATED[name]; },
+    // Execute a tool. Gated actions are held for approval when the setting is on.
     async execute(name, input, ctx) {
       const tool = BY_NAME[name];
       if (!tool) throw new Error("Unknown tool: " + name);
-      const mode = (Store.get().settings.executionMode) || "simulate";
-      if (mode === "real") {
-        return await realOrThrow(name, input);
+      const settings = Store.get().settings;
+      if (settings.approvals && GATED[name]) {
+        Store.addPendingAction({ agentId: ctx && ctx.agentId, missionId: ctx && ctx.missionId, tool: name, input: input });
+        return "⏸ Held for your approval before it runs.";
       }
-      return tool.simulate(input || {}, ctx || {});
+      return await runTool(name, input, ctx);
+    },
+    // Run a previously-gated action after a human approves it.
+    async runApproved(name, input, ctx) {
+      return await runTool(name, input, ctx);
     }
   };
 
