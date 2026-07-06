@@ -24,7 +24,11 @@
       apiKey: "", // optional Anthropic API key (stored locally only)
       model: "claude-sonnet-5",
       workspaceName: "My Company",
-      executionMode: "simulate" // 'simulate' (safe, in-app) | 'real' (pluggable adapters)
+      executionMode: "simulate", // 'simulate' (safe, in-app) | 'real' (pluggable adapters)
+      theme: "dark", // 'dark' | 'light'
+      teamMemory: "", // shared company context injected into every agent
+      webhookUrl: "", // real-mode: POST actions here
+      approvals: false // require human approval before real-mode actions
     }
   });
 

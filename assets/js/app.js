@@ -1239,8 +1239,25 @@
     }
   }
 
+  /* ---------- theme ---------- */
+  function applyTheme() {
+    const theme = Store.get().settings.theme === "light" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+    const btn = document.getElementById("theme-toggle");
+    if (btn) btn.textContent = theme === "light" ? "☀️" : "🌙";
+  }
+  function setupTheme() {
+    applyTheme();
+    const btn = document.getElementById("theme-toggle");
+    if (btn) btn.addEventListener("click", () => {
+      Store.updateSettings({ theme: Store.get().settings.theme === "light" ? "dark" : "light" });
+      applyTheme();
+    });
+  }
+
   /* ---------- boot ---------- */
   window.addEventListener("hashchange", route);
   Store.subscribe(updateNav);
+  setupTheme();
   route();
 })();

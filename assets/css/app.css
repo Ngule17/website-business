@@ -685,3 +685,26 @@ main { min-height: 70vh; padding-bottom: 60px; }
 .legend-item { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--muted); }
 .legend-item strong { color: var(--text); font-variant-numeric: tabular-nums; }
 .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+/* ============ Light theme ============ */
+:root[data-theme="light"] {
+  --bg: #f5f6fb;
+  --bg-2: #eceef7;
+  --surface: #ffffff;
+  --surface-2: #f0f2fa;
+  --border: #dde1ee;
+  --text: #1a1c2e;
+  --muted: #5b6180;
+  --shadow: 0 10px 30px rgba(20, 22, 50, 0.10);
+}
+:root[data-theme="light"] body {
+  background-image:
+    radial-gradient(900px 500px at 80% -10%, rgba(99, 102, 241, 0.10), transparent 60%),
+    radial-gradient(700px 500px at 0% 10%, rgba(139, 92, 246, 0.08), transparent 55%);
+}
+:root[data-theme="light"] .site-header { background: rgba(255, 255, 255, 0.78); }
+:root[data-theme="light"] .chat__header,
+:root[data-theme="light"] .chat__input { background: rgba(20, 22, 50, 0.02); }
+:root[data-theme="light"] .grad { background: linear-gradient(120deg, #4f46e5, #7c3aed, #c026d3); -webkit-background-clip: text; background-clip: text; }
+:root[data-theme="light"] .org-group { background: rgba(20, 22, 50, 0.015); }
+.theme-toggle { font-size: 15px; padding: 6px 10px; }
