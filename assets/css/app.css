@@ -649,3 +649,39 @@ main { min-height: 70vh; padding-bottom: 60px; }
 .starter--save { border-style: dashed; color: var(--primary-2); font-weight: 600; }
 .starter--save:hover { border-color: var(--primary); }
 .data-h2 { margin: 34px 0 18px; font-size: 22px; }
+
+/* ============ Insights / analytics ============ */
+.insights { margin-bottom: 30px; }
+.insights__title { font-size: 18px; margin: 0 0 16px; }
+.feed-heading { font-size: 16px; margin: 8px 0 16px; color: var(--muted); }
+
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+@media (max-width: 640px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+.kpi {
+  display: flex; flex-direction: column; gap: 2px; padding: 16px;
+  border-radius: 12px; border: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--surface), var(--bg-2));
+}
+.kpi strong { font-size: 26px; font-variant-numeric: tabular-nums; }
+.kpi span { color: var(--muted); font-size: 12px; }
+
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+@media (max-width: 720px) { .chart-grid { grid-template-columns: 1fr; } }
+.chart-card { padding: 18px; }
+.chart-title { font-size: 14px; margin: 0 0 14px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+
+/* Horizontal magnitude bars */
+.bars { display: flex; flex-direction: column; gap: 10px; }
+.bar-row { display: grid; grid-template-columns: 120px 1fr 32px; align-items: center; gap: 10px; }
+.bar-label { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { height: 12px; border-radius: 6px; background: var(--surface-2); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 6px; min-width: 4px; transition: width .4s ease; }
+.bar-value { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+
+/* Stacked outcome bar + legend */
+.stack-bar { display: flex; height: 16px; border-radius: 8px; overflow: hidden; gap: 2px; background: var(--surface-2); }
+.stack-seg { height: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; }
+.legend-item { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--muted); }
+.legend-item strong { color: var(--text); font-variant-numeric: tabular-nums; }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; }

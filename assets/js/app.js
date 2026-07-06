@@ -668,6 +668,100 @@
       </div>`;
   }
 
+  /* ---------- insights (analytics) ---------- */
+  const OUTCOME_META = { completed: { label: "Completed", color: "#22c55e" }, partial: { label: "Partial", color: "#f59e0b" }, blocked: { label: "Blocked", color: "#ef4444" } };
+  const TYPE_LABEL = { research: "Research", send_email: "Emails", add_lead: "CRM updates", create_task: "Tasks created", complete_task: "Tasks completed", escalate_to_human: "Escalations", delegate: "Delegations" };
+
+  function computeStats() {
+    const missions = Store.get().missions;
+    const outcomes = { completed: 0, partial: 0, blocked: 0 };
+    const byType = {};
+    const byAgent = {};
+    missions.forEach((m) => {
+      const o = m.result && m.result.outcome;
+      if (o && outcomes[o] !== undefined) outcomes[o] += 1;
+      else if (m.status === "failed") outcomes.blocked += 1;
+      m.log.forEach((e) => {
+        if (e.kind === "action") byType[e.tool] = (byType[e.tool] || 0) + 1;
+        if (e.kind === "delegate") byType.delegate = (byType.delegate || 0) + 1;
+        if ((e.kind === "action" || e.kind === "delegate") && e.agentId) byAgent[e.agentId] = (byAgent[e.agentId] || 0) + 1;
+      });
+    });
+    const totalActions = Object.keys(byType).reduce((n, k) => n + byType[k], 0);
+    return { missions: missions, outcomes: outcomes, byType: byType, byAgent: byAgent, totalActions: totalActions };
+  }
+
+  // A row of labeled magnitude bars, single hue — identity via the text label,
+  // never color alone. rows: [{label, value, color?, meta?}].
+  function barChart(rows, opts) {
+    opts = opts || {};
+    const max = Math.max(1, ...rows.map((r) => r.value));
+    return `<div class="bars">${rows.map((r) => {
+      const pct = Math.round((r.value / max) * 100);
+      const color = r.color || "var(--primary)";
+      return `<div class="bar-row" title="${esc(r.label)}: ${r.value}">
+        <span class="bar-label">${esc(r.label)}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        <span class="bar-value">${r.value}</span>
+      </div>`;
+    }).join("")}</div>`;
+  }
+
+  function renderInsights() {
+    const st = computeStats();
+    const total = st.missions.length;
+    const done = st.outcomes.completed;
+    const rate = total ? Math.round((done / total) * 100) : 0;
+    const openEsc = Store.counts().escalations;
+
+    const kpis = [
+      ["Missions run", total],
+      ["Completion rate", rate + "%"],
+      ["Actions taken", st.totalActions],
+      ["Needs review", openEsc]
+    ];
+
+    // Outcomes as a single stacked bar with a labeled legend (status colors).
+    const outcomeTotal = st.outcomes.completed + st.outcomes.partial + st.outcomes.blocked;
+    const segs = ["completed", "partial", "blocked"].filter((k) => st.outcomes[k] > 0);
+    const stack = outcomeTotal
+      ? `<div class="stack-bar">${segs.map((k) => `<div class="stack-seg" style="width:${(st.outcomes[k] / outcomeTotal) * 100}%;background:${OUTCOME_META[k].color}" title="${OUTCOME_META[k].label}: ${st.outcomes[k]}"></div>`).join("")}</div>
+         <div class="legend">${["completed", "partial", "blocked"].map((k) => `<span class="legend-item"><span class="legend-dot" style="background:${OUTCOME_META[k].color}"></span>${OUTCOME_META[k].label} <strong>${st.outcomes[k]}</strong></span>`).join("")}</div>`
+      : `<p class="muted small">No finished missions yet.</p>`;
+
+    // Actions by type (magnitude, single hue, labeled).
+    const typeRows = Object.keys(st.byType).map((k) => ({ label: TYPE_LABEL[k] || k, value: st.byType[k] }))
+      .sort((a, b) => b.value - a.value);
+
+    // Output by agent (magnitude, each bar in the agent's own accent + name label).
+    const agentRows = Object.keys(st.byAgent).map((id) => {
+      const a = byId(id);
+      return { label: a ? a.name : "Agent", value: st.byAgent[id], color: a ? a.accent : "var(--primary)" };
+    }).sort((a, b) => b.value - a.value).slice(0, 8);
+
+    return `
+      <div class="insights">
+        <h3 class="insights__title">📊 Insights</h3>
+        <div class="kpi-row">
+          ${kpis.map(([label, val]) => `<div class="kpi"><strong>${val}</strong><span>${label}</span></div>`).join("")}
+        </div>
+        <div class="chart-grid">
+          <div class="card chart-card">
+            <h4 class="chart-title">Mission outcomes</h4>
+            ${stack}
+          </div>
+          <div class="card chart-card">
+            <h4 class="chart-title">Actions by type</h4>
+            ${typeRows.length ? barChart(typeRows) : `<p class="muted small">No actions yet.</p>`}
+          </div>
+        </div>
+        <div class="card chart-card">
+          <h4 class="chart-title">Output by agent</h4>
+          ${agentRows.length ? barChart(agentRows) : `<p class="muted small">No agent activity yet.</p>`}
+        </div>
+      </div>`;
+  }
+
   function viewActivity(param) {
     const items = allActivity();
     if (items.length === 0) {
@@ -699,6 +793,9 @@
       <section class="section">
         <div class="section__head"><h2>Team activity</h2><span class="muted">${items.length} events across ${Store.get().missions.length} mission${Store.get().missions.length === 1 ? "" : "s"}</span></div>
 
+        ${renderInsights()}
+
+        <h3 class="feed-heading">Activity feed</h3>
         <div class="leaderboard">
           ${leaders.map((a) => `
             <a class="leader ${activeAgent === a.id ? "active" : ""}" href="#/activity/${encodeURIComponent(a.id)}" style="--accent:${a.accent}">

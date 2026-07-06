@@ -33,6 +33,9 @@ them a goal to pursue autonomously — 24/7.
 - **Team activity feed** — a single, filterable stream of everything your whole
   workforce has done across all missions — decisions, actions, and handoffs —
   with a per-agent contribution leaderboard and links back to each mission.
+- **Insights dashboard** — at the top of Activity: KPI tiles (missions,
+  completion rate, actions, items needing review), mission outcomes, actions by
+  type, and output by agent, rendered as accessible labeled charts.
 - **Mission playbooks** — save a goal + the agent that runs it as a reusable
   one-click playbook, and re-run it any time from the Missions page.
 - **Import / Export** — back up or move your entire workspace (team, custom
