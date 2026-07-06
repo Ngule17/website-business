@@ -45,15 +45,24 @@ them a goal to pursue autonomously — 24/7.
   produced, tabbed by Outbox / CRM / Tasks / Human review.
 - **One-click hiring** — add agents to your workspace; all state persists in
   your browser (`localStorage`).
-- **Live chat** — talk to each agent with role-aware starter prompts.
+- **Live chat & round-table** — talk to one agent, or ask a whole **round-table**
+  of hired agents at once; in live mode each builds on teammates' answers.
+- **Shared team memory** — company context (identity, voice, rules) injected into
+  every agent's live reasoning.
+- **Approval gate** — optionally require your sign-off before agents send emails
+  or add leads; held actions wait in an Approvals queue.
+- **Toast notifications** — clickable toasts when a mission finishes, a teammate
+  escalates, or an action needs approval.
+- **Light & dark themes** — a header toggle, remembered across visits.
 - **Real Claude API or demo mode** — add your Anthropic API key in **Settings**
   and agents reason live via the Claude API (tool-use loop, called directly from
   the browser). With no key, a role-aware simulator drives the same actions so
   the autonomy is fully visible out of the box.
 - **Simulate vs Real execution** — actions run through pluggable adapters. In
   **Simulate** mode they stay inside the app (safe to run and demo). Switch to
-  **Real** mode and drop integration adapters into `tools.js` (Gmail, Slack, a
-  CRM API…) to have agents act on live systems — the agent loop is unchanged.
+  **Real** mode and paste a **Webhook URL** (Zapier / Make / n8n / your API) —
+  every action is POSTed there and mirrored to the workspace. A per-tool
+  `REAL_ADAPTERS` seam in `tools.js` remains for custom integrations.
 - **Responsive dark UI** — self-contained, no build step, no external assets.
 
 ## Running it
