@@ -24,6 +24,8 @@ them a goal to pursue autonomously — 24/7.
   (a manager agent), give it a big goal, and it decomposes the work and assigns
   each part to the right specialist — their nested work streams into one
   color-coded timeline so you can see who did what.
+- **Org chart** — the workspace shows your hired team as a company: managers on
+  top, specialists grouped by function, with quick actions on every node.
 - **Real actions with side effects** — agent decisions produce visible output in
   your workspace: emails in the **Outbox**, leads in the **CRM**, follow-ups on
   the **Tasks** board, and items in the **Human review** queue when a decision

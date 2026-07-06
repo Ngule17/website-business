@@ -591,3 +591,49 @@ main { min-height: 70vh; padding-bottom: 60px; }
 .form .check input { width: 18px; height: 18px; accent-color: var(--primary); margin-top: 2px; flex-shrink: 0; }
 .form-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .saved-note.err { color: #fca5a5; }
+
+/* ============ Org chart (workspace) ============ */
+.org { margin-top: 8px; }
+.org__title { font-size: 18px; margin-bottom: 18px; }
+
+.org-managers { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; }
+.org-connector {
+  width: 2px; height: 28px; margin: 0 auto;
+  background: linear-gradient(var(--border), transparent);
+}
+.org-hint {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 16px 18px; margin-bottom: 22px; font-size: 14px; color: var(--muted);
+}
+
+.org-groups {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;
+  padding-top: 4px;
+}
+.org-group {
+  border: 1px solid var(--border); border-radius: 14px; padding: 14px;
+  background: rgba(255, 255, 255, 0.015);
+}
+.org-group__head {
+  display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 12px;
+}
+.org-group__count {
+  min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px; background: var(--surface-2); color: var(--text);
+}
+.org-group__nodes { display: flex; flex-direction: column; gap: 12px; }
+
+.org-node { padding: 16px; }
+.org-node--manager {
+  min-width: 280px;
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent), var(--shadow);
+}
+.org-node__head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.org-node__id h3 { margin: 0; font-size: 16px; }
+.org-node__id .role { margin: 0; color: var(--muted); font-size: 13px; }
+.org-node__actions { display: flex; gap: 8px; margin-top: 12px; }
+.org-node__actions .btn { flex: 1; }
+.org-node__actions .btn[data-hire] { flex: 0 0 auto; }

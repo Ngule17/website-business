@@ -236,24 +236,58 @@
             </a>`).join("")}
         </div>
 
-        <div class="grid grid-3">
-          ${team.map((agent) => {
-            const active = Store.get().missions.filter((m) => m.agentId === agent.id).length;
-            return `
-              <article class="card team-card">
-                <div class="agent-card__head">
-                  ${avatarEl(agent, 48)}
-                  <div><h3>${esc(agent.name)}</h3><p class="role">${esc(agent.role)}</p></div>
-                </div>
-                <p class="muted small">${active} mission${active === 1 ? "" : "s"} · ${Store.getConversation(agent.id).length} messages</p>
-                <div class="agent-card__actions">
-                  <a class="btn btn-primary" href="#/agent/${agent.id}">Assign mission</a>
-                  <a class="btn btn-ghost" href="#/chat/${agent.id}">Chat</a>
-                </div>
-              </article>`;
-          }).join("")}
-        </div>
+        ${orgChart(team)}
       </section>`;
+  }
+
+  function orgNode(agent, opts) {
+    const active = Store.get().missions.filter((m) => m.agentId === agent.id).length;
+    return `
+      <article class="org-node card ${opts && opts.manager ? "org-node--manager" : ""}" style="--accent:${agent.accent}">
+        <div class="org-node__head">
+          ${avatarEl(agent, 44)}
+          <div class="org-node__id">
+            <h3>${esc(agent.name)}${agent.custom ? ` <span class="custom-tag">★</span>` : ""}</h3>
+            <p class="role">${esc(agent.role)}</p>
+          </div>
+        </div>
+        <p class="muted small">${active} mission${active === 1 ? "" : "s"} · ${Store.getConversation(agent.id).length} messages</p>
+        <div class="org-node__actions">
+          <a class="btn btn-primary small" href="#/agent/${agent.id}">Assign</a>
+          <a class="btn btn-ghost small" href="#/chat/${agent.id}">Chat</a>
+          <button class="btn btn-ghost small" data-hire="${agent.id}" title="Remove from team">✕</button>
+        </div>
+      </article>`;
+  }
+
+  // Visual org chart: managers on top, specialists grouped by function.
+  function orgChart(team) {
+    const managers = team.filter((a) => a.manager);
+    const workers = team.filter((a) => !a.manager);
+    const groups = {};
+    workers.forEach((a) => { (groups[a.department] = groups[a.department] || []).push(a); });
+    const order = FUNCTIONS.concat(Object.keys(groups).filter((d) => FUNCTIONS.indexOf(d) === -1));
+    const groupNames = order.filter((d) => groups[d] && groups[d].length);
+
+    const managerBlock = managers.length
+      ? `<div class="org-managers">${managers.map((m) => orgNode(m, { manager: true })).join("")}</div>
+         <div class="org-connector"></div>`
+      : `<div class="org-hint card">
+           <span>🧑‍💼 No manager yet.</span>
+           <a class="link" href="#/agent/max-chief">Hire Max, the Chief of Staff</a> to coordinate and delegate across your team.
+         </div>`;
+
+    const groupBlock = groupNames.length
+      ? `<div class="org-groups">
+          ${groupNames.map((dept) => `
+            <div class="org-group">
+              <div class="org-group__head">${esc(dept)} <span class="org-group__count">${groups[dept].length}</span></div>
+              <div class="org-group__nodes">${groups[dept].map((a) => orgNode(a)).join("")}</div>
+            </div>`).join("")}
+        </div>`
+      : `<p class="muted">No specialists yet — <a class="link" href="#/agents">hire some from the marketplace</a>.</p>`;
+
+    return `<div class="org"><h3 class="org__title">Org chart</h3>${managerBlock}${groupBlock}</div>`;
   }
 
   function viewChat(id) {
