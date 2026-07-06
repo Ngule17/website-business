@@ -228,7 +228,10 @@
       <section class="section">
         <div class="section__head">
           <h2>${esc(s.settings.workspaceName)}</h2>
-          <span class="muted">${team.length} agent${team.length > 1 ? "s" : ""} on your team</span>
+          <div class="market-head-actions">
+            <span class="muted">${team.length} agent${team.length > 1 ? "s" : ""} on your team</span>
+            <a class="btn btn-ghost small" href="#/roundtable">💬 Round-table</a>
+          </div>
         </div>
 
         <div class="ws-stats">
@@ -912,6 +915,99 @@
     });
   }
 
+  /* ---------- round-table (group chat) ---------- */
+  function rtBubble(m) {
+    if (m.role === "user") return `<div class="msg msg--user">${esc(m.content).replace(/\n/g, "<br>")}</div>`;
+    return `
+      <div class="rt-msg">
+        <span class="avatar" style="--accent:${m.accent || "#6366f1"};width:32px;height:32px;font-size:16px">${m.avatar || "🤖"}</span>
+        <div class="rt-msg__body">
+          <span class="rt-name">${esc(m.name || "Agent")}</span>
+          <div class="msg msg--assistant">${esc(m.content).replace(/\n/g, "<br>")}</div>
+        </div>
+      </div>`;
+  }
+
+  function viewRoundtable() {
+    const team = Store.get().hired.map(byId).filter(Boolean);
+    if (!team.length) {
+      return `<section class="section"><div class="empty card"><div class="empty__icon">💬</div><h3>Your round-table is empty</h3><p>Hire a few agents and ask them all at once.</p><a class="btn btn-primary" href="#/agents">Browse the marketplace</a></div></section>`;
+    }
+    const convo = Store.getConversation("roundtable");
+    return `
+      <section class="chat">
+        <header class="chat__header">
+          <a class="link back" href="#/workspace">←</a>
+          <div class="chat__title"><strong>Round-table</strong><span class="muted small">${team.length} agent${team.length > 1 ? "s" : ""} · ${Api.hasKey() ? "Live" : "Demo mode"}</span></div>
+          <button class="btn btn-ghost small" id="rt-clear">Clear</button>
+        </header>
+        <div class="rt-roster" id="rt-roster">
+          ${team.map((a) => `<button class="chip rt-chip active" data-rt-agent="${a.id}" style="--accent:${a.accent}">${a.avatar} ${esc(a.name)}</button>`).join("")}
+        </div>
+        <div class="chat__body" id="rt-body">
+          ${convo.length ? convo.map(rtBubble).join("") : `<div class="starters"><p class="muted small">Ask the room a question — each active agent weighs in, building on the others. Toggle who's in above.</p></div>`}
+        </div>
+        <form class="chat__input" id="rt-form" autocomplete="off">
+          <input type="text" id="rt-text" placeholder="Ask the room…" aria-label="Message the round-table" />
+          <button class="btn btn-primary" type="submit" id="rt-send">Send</button>
+        </form>
+      </section>`;
+  }
+
+  function setupRoundtable() {
+    const form = document.getElementById("rt-form");
+    if (!form) return;
+    const input = document.getElementById("rt-text");
+    const body = document.getElementById("rt-body");
+    const sendBtn = document.getElementById("rt-send");
+    const roster = document.getElementById("rt-roster");
+    const scroll = () => { body.scrollTop = body.scrollHeight; };
+    scroll(); input.focus();
+
+    roster.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-rt-agent]");
+      if (b) b.classList.toggle("active");
+    });
+    document.getElementById("rt-clear").addEventListener("click", () => { Store.clearConversation("roundtable"); route(); });
+
+    async function submit(e) {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      const active = Array.from(roster.querySelectorAll(".rt-chip.active")).map((c) => byId(c.getAttribute("data-rt-agent"))).filter(Boolean);
+      if (!active.length) { input.focus(); return; }
+
+      const st = body.querySelector(".starters"); if (st) st.remove();
+      Store.addMessage("roundtable", { role: "user", content: text, ts: Date.now() });
+      body.insertAdjacentHTML("beforeend", rtBubble({ role: "user", content: text }));
+      input.value = ""; input.disabled = sendBtn.disabled = true; scroll();
+
+      const said = [];
+      for (const agent of active) {
+        const typing = document.createElement("div");
+        typing.className = "rt-msg";
+        typing.innerHTML = `<span class="avatar" style="--accent:${agent.accent};width:32px;height:32px;font-size:16px">${agent.avatar}</span><div class="rt-msg__body"><span class="rt-name">${esc(agent.name)}</span><div class="msg msg--assistant typing"><span></span><span></span><span></span></div></div>`;
+        body.appendChild(typing); scroll();
+        // Only compose the collaborative prompt for live reasoning; in demo the
+        // simulator would just echo it, so send the raw question instead.
+        const prompt = !Api.hasKey() ? text : text + (said.length
+          ? "\n\nYour teammates have said so far:\n" + said.map((s) => s.name + ": " + s.content).join("\n") + "\n\nAdd your own perspective as " + agent.role + " — build on or respectfully differ. Be brief."
+          : "\n\nRespond briefly in your own voice as " + agent.role + ".");
+        let reply;
+        try { reply = await Api.send(agent, [{ role: "user", content: prompt }]); }
+        catch (err) { reply = "⚠️ " + (err && err.message ? err.message : "Something went wrong."); }
+        typing.remove();
+        const msg = { role: "assistant", content: reply, agentId: agent.id, name: agent.name, avatar: agent.avatar, accent: agent.accent, ts: Date.now() };
+        Store.addMessage("roundtable", msg);
+        body.insertAdjacentHTML("beforeend", rtBubble(msg));
+        said.push({ name: agent.name, content: reply });
+        scroll();
+      }
+      input.disabled = sendBtn.disabled = false; input.focus(); scroll();
+    }
+    form.addEventListener("submit", submit);
+  }
+
   function viewNotFound() {
     return `<section class="section"><div class="empty card"><div class="empty__icon">🤖</div><h3>Page not found</h3><a class="btn btn-primary" href="#/">Go home</a></div></section>`;
   }
@@ -933,6 +1029,7 @@
       case "mission": html = viewMission(param); break;
       case "activity": html = viewActivity(param); break;
       case "create": html = viewCreate(param); break;
+      case "roundtable": html = viewRoundtable(); break;
       case "ops": html = viewOps(); break;
       case "settings": html = viewSettings(); break;
       default: html = viewNotFound();
@@ -985,6 +1082,7 @@
     if (page === "ops") setupOps();
     if (page === "activity") setupActivity();
     if (page === "create") setupCreate(param);
+    if (page === "roundtable") setupRoundtable();
   }
 
   function setupActivity() {

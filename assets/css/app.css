@@ -727,3 +727,16 @@ main { min-height: 70vh; padding-bottom: 60px; }
 .toast--ok { border-left: 3px solid #22c55e; }
 .toast--warn { border-left: 3px solid #f59e0b; }
 .toast--info { border-left: 3px solid var(--primary); }
+
+/* ============ Round-table (group chat) ============ */
+.rt-roster {
+  display: flex; flex-wrap: wrap; gap: 7px; padding: 12px 14px;
+  border-bottom: 1px solid var(--border); background: rgba(0, 0, 0, 0.12);
+}
+:root[data-theme="light"] .rt-roster { background: rgba(20, 22, 50, 0.02); }
+.rt-chip { opacity: .45; transition: opacity .15s, border-color .15s; }
+.rt-chip.active { opacity: 1; border-color: color-mix(in srgb, var(--accent) 60%, var(--border)); color: var(--text); }
+.rt-msg { display: flex; gap: 10px; align-self: flex-start; max-width: 82%; }
+.rt-msg__body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.rt-name { font-size: 12px; font-weight: 700; color: var(--muted); padding-left: 2px; }
+.rt-msg .msg { max-width: 100%; }
