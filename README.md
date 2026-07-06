@@ -14,6 +14,11 @@ them a goal to pursue autonomously — 24/7.
 - **Autonomous missions** — give an agent a goal and it works on its own: it
   reasons, **decides**, takes **actions**, observes the results, and repeats
   until it's done — logging every decision to a live timeline.
+- **Team collaboration** — agents can **delegate** a sub-task to a teammate, who
+  runs its own sub-mission and reports back. Hire **Max, the Chief of Staff**
+  (a manager agent), give it a big goal, and it decomposes the work and assigns
+  each part to the right specialist — their nested work streams into one
+  color-coded timeline so you can see who did what.
 - **Real actions with side effects** — agent decisions produce visible output in
   your workspace: emails in the **Outbox**, leads in the **CRM**, follow-ups on
   the **Tasks** board, and items in the **Human review** queue when a decision
@@ -72,5 +77,8 @@ assets/js/app.js       SPA router and views
    no key, a role-aware simulator drives the same tools so the flow is visible.
 4. Every tool runs through an adapter chosen by the execution mode, so the exact
    same agent works whether it's simulating or acting on real systems.
+5. An agent can call `delegate_to` to hand a sub-goal to a hired teammate. The
+   teammate runs its own loop (up to two levels deep) and returns a summary, so
+   a manager agent like **Max** can coordinate the whole team on one goal.
 
 Built with vanilla HTML, CSS, and JavaScript — no dependencies, no build tools.

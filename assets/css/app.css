@@ -507,3 +507,25 @@ main { min-height: 70vh; padding-bottom: 60px; }
 }
 .industry-tile__body { display: flex; flex-direction: column; gap: 2px; }
 .industry-tile__body strong { font-size: 15px; }
+
+/* ============ Team collaboration (delegation) ============ */
+.log--nested {
+  border-left: 3px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+}
+.log__actor {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 700; color: var(--text);
+  background: color-mix(in srgb, var(--accent) 22%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  padding: 2px 8px; border-radius: 999px; margin-bottom: 6px;
+}
+.log--delegate {
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+  background: rgba(99, 102, 241, 0.08);
+}
+.log--delegate .log__tool { font-weight: 700; }
+.log--return {
+  border-color: color-mix(in srgb, var(--primary-2) 45%, var(--border));
+  background: rgba(139, 92, 246, 0.08);
+}

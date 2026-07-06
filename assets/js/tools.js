@@ -143,6 +143,22 @@
       }
     },
     {
+      name: "delegate_to",
+      description:
+        "Delegate a sub-task to another hired specialist on the team. Use this when the work needs a different specialty than yours. The teammate runs the sub-task autonomously and reports back. Provide the teammate's exact agent id and a clear, self-contained sub-goal.",
+      input_schema: {
+        type: "object",
+        properties: {
+          agent_id: { type: "string", description: "The exact id of the teammate to delegate to (from your roster)." },
+          task: { type: "string", description: "A clear, self-contained sub-goal for that specialist." }
+        },
+        required: ["agent_id", "task"]
+      },
+      // Delegation is an orchestration primitive handled directly by the agent
+      // runtime (it spawns and runs a sub-mission), so this is never called.
+      simulate: () => "[[delegation is handled by the runtime]]"
+    },
+    {
       name: "finish",
       description: "End the mission. Call this once the goal is achieved or no further autonomous action is appropriate.",
       input_schema: {

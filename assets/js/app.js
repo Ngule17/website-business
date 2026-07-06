@@ -179,7 +179,9 @@
           <h3>🤖 Assign an autonomous mission</h3>
           <span class="mode-pill">${Api.hasKey() ? "Live reasoning" : "Demo mode"} · ${esc(Store.get().settings.executionMode)}</span>
         </div>
-        <p class="muted small">Give ${esc(agent.name)} a goal. They'll work it autonomously — deciding and taking actions on their own — and log every decision.</p>
+        <p class="muted small">${agent.manager
+          ? `Give ${esc(agent.name)} a big goal. As your Chief of Staff, ${esc(agent.name)} breaks it into workstreams and <strong>delegates</strong> each to the right specialist on your team, then synthesizes the results. You have ${Store.get().hired.filter((id) => { const a = byId(id); return a && !a.manager; }).length} specialist(s) available to delegate to.`
+          : `Give ${esc(agent.name)} a goal. They'll work it autonomously — deciding and taking actions on their own — and log every decision.`}</p>
         <div class="assign__row">
           <input type="text" id="mission-goal" placeholder="e.g. ${esc(agent.starters[0])}" aria-label="Mission goal" />
           <button class="btn btn-primary" id="assign-run">Run autonomously →</button>
@@ -370,7 +372,7 @@
       </section>`;
   }
 
-  const KIND_ICON = { status: "•", reason: "💭", decision: "🧭", action: "⚙️", error: "⚠️", finish: "🏁" };
+  const KIND_ICON = { status: "•", reason: "💭", decision: "🧭", action: "⚙️", error: "⚠️", finish: "🏁", delegate: "🤝", delegate_return: "📨" };
   const TOOL_LABEL = {
     log_decision: "Decision", research: "Research", send_email: "Sent email",
     add_lead: "CRM update", create_task: "Created task", complete_task: "Completed task",
@@ -378,13 +380,26 @@
   };
 
   function logEntry(e) {
+    const depth = e.depth || 0;
+    const wrapAttrs = ` style="margin-left:${depth * 24}px;--accent:${e.accent || "#6366f1"}"`;
+    const nested = depth ? " log--nested" : "";
+    // For delegated (sub-agent) work, tag who is acting.
+    const actor = depth ? `<span class="log__actor">${e.avatar || ""} ${esc(e.agentName || "")}</span>` : "";
+
+    if (e.kind === "delegate") {
+      return `<div class="log log--delegate${nested}"${wrapAttrs}><span class="log__icon">🤝</span><div class="log__body">${actor}<span class="log__tool">Delegated to ${esc(e.toName || "")}</span><div class="log__input">${esc(e.text || "")}</div></div></div>`;
+    }
+    if (e.kind === "delegate_return") {
+      return `<div class="log log--return${nested}"${wrapAttrs}><span class="log__icon">📨</span><div class="log__body">${actor}<strong>${esc(e.toName || "")} reported back${e.outcome ? " (" + esc(e.outcome) + ")" : ""}</strong><div class="log__result">${esc(e.text || "")}</div></div></div>`;
+    }
     if (e.kind === "action") {
       const label = TOOL_LABEL[e.tool] || e.tool;
       const detail = `<div class="log__result ${e.status === "error" ? "is-error" : ""}">${esc(e.result || "")}</div>`;
       return `
-        <div class="log log--action">
+        <div class="log log--action${nested}"${wrapAttrs}>
           <span class="log__icon">${KIND_ICON.action}</span>
           <div class="log__body">
+            ${actor}
             <span class="log__tool">${esc(label)}</span>
             <div class="log__input">${esc(summarizeInput(e.tool, e.input))}</div>
             ${detail}
@@ -393,7 +408,7 @@
     }
     const cls = e.kind === "error" ? "log--error" : e.kind === "decision" ? "log--decision" : e.kind === "finish" ? "log--finish" : "log--note";
     const text = e.kind === "finish" ? `<strong>Mission ${esc(e.outcome || "complete")}.</strong> ${esc(e.text || "")}` : esc(e.text || "");
-    return `<div class="log ${cls}"><span class="log__icon">${KIND_ICON[e.kind] || "•"}</span><div class="log__body">${text}</div></div>`;
+    return `<div class="log ${cls}${nested}"${wrapAttrs}><span class="log__icon">${KIND_ICON[e.kind] || "•"}</span><div class="log__body">${actor}${text}</div></div>`;
   }
 
   function summarizeInput(tool, input) {
