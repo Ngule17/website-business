@@ -1,88 +1,56 @@
-<!--index.html-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Company Website</title>
-
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="styling.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
-
+    <meta name="description" content="Hire specialized AI employees and agents — sales, support, content, data and more. Put them to work in your own workspace.">
+    <title>AI Workforce — Hire AI Employees & Agents</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <link href="assets/css/app.css" rel="stylesheet">
   </head>
   <body>
-      <!--Create Nav bar-->
-      <nav role="navigation" class="navbar navbar-inverse">
-          <div class="container-fluid">
-              <div class="navbar-header">
-                  <a class="navbar-brand" href="#"><img src="images/weblogo.png" class="logo"></a>
-                  <button type="button" class="navbar-toggle" data-target="#navbarCollapse" data-toggle="collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                  </button>
-              </div>
-              <div class="navbar-collapse collapse" id="navbarCollapse">
-                  <ul class="nav navbar-nav">
-                      <li><a href="#">Home</a></li>
-                      <li><a href="#">About</a></li>
-                      <li><a href="#">Portfolio</a></li>
-                      <li><a href="#">Contact</a></li>
-                  </ul>
-              </div>
-          </div>
-      </nav>
-      
-      <!--Create header-->
-      <div class="jumbotron">
-          <div class="container">
-              <h1>Looking to make an Awesome Website?</h1>
-          </div>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="#/">
+          <span class="brand__logo">🤖</span>
+          <span>AI Workforce</span>
+        </a>
+        <button class="btn btn-ghost small theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">🌙</button>
+        <button class="btn btn-ghost small nav-toggle" id="nav-toggle" aria-label="Toggle menu">☰</button>
+        <nav class="nav" id="nav">
+          <a class="nav-link" href="#/">Home</a>
+          <a class="nav-link" href="#/agents">Marketplace</a>
+          <a class="nav-link" href="#/workspace">Workspace <span class="nav-count" data-nav-count></span></a>
+          <a class="nav-link" href="#/missions">Missions</a>
+          <a class="nav-link" href="#/activity">Activity</a>
+          <a class="nav-link" href="#/ops">Operations <span class="nav-count" data-nav-ops></span></a>
+          <a class="nav-link" href="#/settings">Settings</a>
+        </nav>
       </div>
-      
-      <!--Create icons with text-->
-      <div class="icons">
-         <div class="container">
-            <div class="row">
-               <div class="col-md-4">
-                  <img src="images/money.png" class="bodyimage"> 
-                  <h2>Price it</h2>
-                  <p>Get in touch for an immediate no obligation quote!</p>
-               </div>
-               <div class="col-md-4">
-                  <img src="images/plan.png" class="bodyimage"> 
-                  <h2>Plan it</h2>
-                  <p>We will agree on a deadline and commit to it.</p>
-               </div>
-               <div class="col-md-4">
-                  <img src="images/finish.png" class="bodyimage"> 
-                  <h2>Make it</h2>
-                  <p>We will deliver your website on time with the best quality.</p>
-               </div>
-            </div>
-         </div>
-      </div>
-      <--Create contact button-->
-      <div class="contact">
-          <div class="container">
-              <a href="#" class="btn">Get in touch</a>
-          </div>
-      </div>
-      <!--Create Footer-->
-      <div class="footer">
-          <div class="container">
-              <p>&copy; steven ngule.</p>
-          </div>
-      </div>
-      
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+    </header>
+
+    <main id="app"><!-- views render here --></main>
+
+    <footer class="site-footer">
+      <p>&copy; Steven Ngule · AI Workforce — hire AI employees that work 24/7.</p>
+    </footer>
+
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/store.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/tools.js"></script>
+    <script src="assets/js/agent.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+      // Mobile nav toggle
+      (function () {
+        var t = document.getElementById("nav-toggle");
+        var n = document.getElementById("nav");
+        t.addEventListener("click", function () { n.classList.toggle("open"); });
+        n.addEventListener("click", function (e) {
+          if (e.target.closest(".nav-link")) n.classList.remove("open");
+        });
+      })();
+    </script>
   </body>
 </html>
