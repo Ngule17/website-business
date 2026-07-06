@@ -158,7 +158,9 @@
       Support: [
         { decision: ["Resolve the customer issue directly", "Fast, empathetic resolution protects the relationship."] },
         { tool: "send_email", input: { to: "customer", subject: "Re: your request", body: "Hi,\n\nThanks for flagging this. Here's what I've done about \"" + g + "\" and the next step on our side.\n\n— " + agent.name } },
-        { tool: "create_task", input: { title: "Root-cause: " + g, priority: "medium" } }
+        { tool: "create_task", input: { title: "Root-cause: " + g, priority: "medium" } },
+        { decision: ["Check if this needs a policy exception", "Goodwill credits beyond policy need a human sign-off."] },
+        { tool: "escalate_to_human", input: { reason: "Possible policy exception", question: "Approve a goodwill credit for this customer?" } }
       ],
       Marketing: [
         { decision: ["Plan content around the goal", "Clear audience + hook first, draft second."] },

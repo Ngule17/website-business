@@ -1239,6 +1239,41 @@
     }
   }
 
+  /* ---------- notifications (toasts) ---------- */
+  let toastWrap = null;
+  function notify(text, opts) {
+    opts = opts || {};
+    if (!toastWrap) { toastWrap = document.createElement("div"); toastWrap.className = "toasts"; document.body.appendChild(toastWrap); }
+    const t = document.createElement("div");
+    t.className = "toast toast--" + (opts.kind || "info");
+    t.innerHTML = `<span class="toast__icon">${opts.icon || "🔔"}</span><span class="toast__text">${esc(text)}</span>`;
+    toastWrap.appendChild(t);
+    requestAnimationFrame(() => t.classList.add("show"));
+    const dismiss = () => { t.classList.remove("show"); setTimeout(() => t.remove(), 300); };
+    const timer = setTimeout(dismiss, opts.timeout || 5000);
+    t.addEventListener("click", () => { clearTimeout(timer); if (opts.href) location.hash = opts.href; dismiss(); });
+  }
+
+  // Watch the store and toast on newly finished missions / new escalations.
+  let prev = { done: 0, escTotal: 0 };
+  function watchEvents(state) {
+    const done = state.missions.filter((m) => m.status === "done" || m.status === "failed").length;
+    const escTotal = state.escalations.length;
+    if (done > prev.done) {
+      const m = state.missions.filter((x) => x.status === "done" || x.status === "failed")
+        .sort((a, b) => (b.finishedAt || 0) - (a.finishedAt || 0))[0];
+      if (m) {
+        const a = byId(m.agentId);
+        notify(`${a ? a.name : "Agent"} finished: ${m.goal}`, { href: "#/mission/" + m.id, icon: m.status === "failed" ? "⚠️" : "🏁", kind: m.status === "failed" ? "warn" : "ok" });
+      }
+    }
+    if (escTotal > prev.escTotal) {
+      const e = state.escalations[0];
+      if (e) { const a = byId(e.agentId); notify(`${a ? a.name : "Agent"} needs your review: ${e.question}`, { href: "#/ops/escalations", icon: "🙋", kind: "warn" }); }
+    }
+    prev.done = done; prev.escTotal = escTotal;
+  }
+
   /* ---------- theme ---------- */
   function applyTheme() {
     const theme = Store.get().settings.theme === "light" ? "light" : "dark";
@@ -1257,7 +1292,11 @@
 
   /* ---------- boot ---------- */
   window.addEventListener("hashchange", route);
+  // Seed event baselines so we don't toast for pre-existing data on load.
+  prev.done = Store.get().missions.filter((m) => m.status === "done" || m.status === "failed").length;
+  prev.escTotal = Store.get().escalations.length;
   Store.subscribe(updateNav);
+  Store.subscribe(watchEvents);
   setupTheme();
   route();
 })();
