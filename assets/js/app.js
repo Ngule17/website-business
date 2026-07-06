@@ -513,6 +513,117 @@
     return `<div class="empty card"><div class="empty__icon">${icon}</div><h3>${esc(title)}</h3><p>${esc(sub)}</p></div>`;
   }
 
+  /* ---------- team activity feed ---------- */
+  function timeAgo(ts) {
+    if (!ts) return "";
+    const s = Math.floor((Date.now() - ts) / 1000);
+    if (s < 45) return "just now";
+    const m = Math.floor(s / 60);
+    if (m < 60) return m + "m ago";
+    const h = Math.floor(m / 60);
+    if (h < 24) return h + "h ago";
+    return Math.floor(h / 24) + "d ago";
+  }
+
+  // Flatten every mission's log into one activity stream (most recent first).
+  const FEED_KINDS = ["action", "decision", "delegate", "delegate_return", "finish", "error"];
+  function allActivity() {
+    const items = [];
+    Store.get().missions.forEach((m) => {
+      const owner = byId(m.agentId);
+      m.log.forEach((e) => {
+        if (FEED_KINDS.indexOf(e.kind) === -1) return;
+        items.push(Object.assign({}, e, {
+          missionId: m.id,
+          missionGoal: m.goal,
+          agentId: e.agentId || m.agentId,
+          agentName: e.agentName || (owner && owner.name) || "Agent",
+          avatar: e.avatar || (owner && owner.avatar) || "🤖",
+          accent: e.accent || (owner && owner.accent) || "#6366f1"
+        }));
+      });
+    });
+    items.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+    return items;
+  }
+
+  function activityVerb(e) {
+    if (e.kind === "action") return { verb: TOOL_LABEL[e.tool] || e.tool, detail: summarizeInput(e.tool, e.input) };
+    if (e.kind === "decision") return { verb: "Decision", detail: e.text };
+    if (e.kind === "delegate") return { verb: "Delegated to " + (e.toName || ""), detail: e.text };
+    if (e.kind === "delegate_return") return { verb: "Got results from " + (e.toName || ""), detail: e.text };
+    if (e.kind === "finish") return { verb: "Finished a mission" + (e.outcome ? " (" + e.outcome + ")" : ""), detail: e.text };
+    if (e.kind === "error") return { verb: "Hit an issue", detail: e.text };
+    return { verb: e.kind, detail: e.text };
+  }
+
+  function activityRow(e) {
+    const v = activityVerb(e);
+    const size = 36;
+    return `
+      <div class="feed-item" style="--accent:${e.accent}">
+        <span class="avatar" style="--accent:${e.accent};width:${size}px;height:${size}px;font-size:18px">${e.avatar}</span>
+        <div class="feed-item__body">
+          <div class="feed-item__head">
+            <strong>${esc(e.agentName)}</strong>
+            <span class="feed-verb feed-verb--${e.kind}">${esc(v.verb)}</span>
+            <span class="feed-time">${timeAgo(e.ts)}</span>
+          </div>
+          ${v.detail ? `<div class="feed-detail">${esc(v.detail)}</div>` : ""}
+          <a class="feed-mission" href="#/mission/${e.missionId}">↳ ${esc(e.missionGoal)}</a>
+        </div>
+      </div>`;
+  }
+
+  function viewActivity(param) {
+    const items = allActivity();
+    if (items.length === 0) {
+      return `
+        <section class="section">
+          <h2>Team activity</h2>
+          <div class="empty card">
+            <div class="empty__icon">📡</div>
+            <h3>No activity yet</h3>
+            <p>Assign a mission and every decision, action, and handoff your team makes will stream here.</p>
+            <a class="btn btn-primary" href="#/workspace">Go to workspace</a>
+          </div>
+        </section>`;
+    }
+    const activeAgent = param ? decodeURIComponent(param) : "all";
+
+    // Distinct agents present + contribution counts (actions + delegations).
+    const present = [];
+    const seen = {};
+    const counts = {};
+    items.forEach((e) => {
+      if (!seen[e.agentId]) { seen[e.agentId] = true; present.push({ id: e.agentId, name: e.agentName, avatar: e.avatar, accent: e.accent }); }
+      if (e.kind === "action" || e.kind === "delegate") counts[e.agentId] = (counts[e.agentId] || 0) + 1;
+    });
+    const leaders = present.slice().sort((a, b) => (counts[b.id] || 0) - (counts[a.id] || 0)).slice(0, 6);
+    const shown = activeAgent === "all" ? items : items.filter((e) => e.agentId === activeAgent);
+
+    return `
+      <section class="section">
+        <div class="section__head"><h2>Team activity</h2><span class="muted">${items.length} events across ${Store.get().missions.length} mission${Store.get().missions.length === 1 ? "" : "s"}</span></div>
+
+        <div class="leaderboard">
+          ${leaders.map((a) => `
+            <a class="leader ${activeAgent === a.id ? "active" : ""}" href="#/activity/${encodeURIComponent(a.id)}" style="--accent:${a.accent}">
+              <span class="avatar" style="--accent:${a.accent};width:30px;height:30px;font-size:15px">${a.avatar}</span>
+              <span class="leader__name">${esc(a.name)}</span>
+              <span class="leader__count">${counts[a.id] || 0}</span>
+            </a>`).join("")}
+        </div>
+
+        <div class="filters" id="activity-filters">
+          <button class="chip ${activeAgent === "all" ? "active" : ""}" data-activity="all">✨ Everyone</button>
+          ${present.map((a) => `<button class="chip ${activeAgent === a.id ? "active" : ""}" data-activity="${esc(a.id)}">${a.avatar} ${esc(a.name)}</button>`).join("")}
+        </div>
+
+        <div class="feed">${shown.map(activityRow).join("")}</div>
+      </section>`;
+  }
+
   function viewNotFound() {
     return `<section class="section"><div class="empty card"><div class="empty__icon">🤖</div><h3>Page not found</h3><a class="btn btn-primary" href="#/">Go home</a></div></section>`;
   }
@@ -532,6 +643,7 @@
       case "chat": html = viewChat(param); break;
       case "missions": html = viewMissions(); break;
       case "mission": html = viewMission(param); break;
+      case "activity": html = viewActivity(param); break;
       case "ops": html = viewOps(); break;
       case "settings": html = viewSettings(); break;
       default: html = viewNotFound();
@@ -559,6 +671,7 @@
       el.classList.toggle("active", href === hash ||
         (href === "#/agents" && (hash.startsWith("#/agents") || hash.startsWith("#/agent/"))) ||
         (href === "#/missions" && hash.startsWith("#/mission")) ||
+        (href === "#/activity" && hash.startsWith("#/activity")) ||
         (href === "#/ops" && hash.startsWith("#/ops")));
     });
   }
@@ -580,6 +693,18 @@
     if (page === "agent") setupAssign(byId(param));
     if (page === "mission") setupMission(param);
     if (page === "ops") setupOps();
+    if (page === "activity") setupActivity();
+  }
+
+  function setupActivity() {
+    const filters = document.getElementById("activity-filters");
+    if (!filters) return;
+    filters.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-activity]");
+      if (!btn) return;
+      const who = btn.getAttribute("data-activity");
+      location.hash = who === "all" ? "#/activity" : "#/activity/" + encodeURIComponent(who);
+    });
   }
 
   /* ---------- autonomous mission wiring ---------- */

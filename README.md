@@ -23,6 +23,9 @@ them a goal to pursue autonomously — 24/7.
   your workspace: emails in the **Outbox**, leads in the **CRM**, follow-ups on
   the **Tasks** board, and items in the **Human review** queue when a decision
   is above the agent's authority.
+- **Team activity feed** — a single, filterable stream of everything your whole
+  workforce has done across all missions — decisions, actions, and handoffs —
+  with a per-agent contribution leaderboard and links back to each mission.
 - **Operations dashboard** — one place to review everything your agents
   produced, tabbed by Outbox / CRM / Tasks / Human review.
 - **One-click hiring** — add agents to your workspace; all state persists in

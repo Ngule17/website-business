@@ -529,3 +529,45 @@ main { min-height: 70vh; padding-bottom: 60px; }
   border-color: color-mix(in srgb, var(--primary-2) 45%, var(--border));
   background: rgba(139, 92, 246, 0.08);
 }
+
+/* ============ Team activity feed ============ */
+.leaderboard { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.leader {
+  display: flex; align-items: center; gap: 9px; padding: 8px 14px 8px 8px;
+  border-radius: 999px; border: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--surface), var(--bg-2));
+  transition: border-color .15s, transform .1s;
+}
+.leader:hover { transform: translateY(-1px); border-color: var(--accent); }
+.leader.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.leader__name { font-size: 13px; font-weight: 600; }
+.leader__count {
+  min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #fff;
+  background: color-mix(in srgb, var(--accent) 70%, #000);
+}
+
+#activity-filters { margin-bottom: 22px; }
+
+.feed { display: flex; flex-direction: column; gap: 10px; position: relative; }
+.feed-item {
+  display: flex; gap: 12px; padding: 14px 16px; border-radius: 12px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--surface), var(--bg-2));
+  border-left: 3px solid color-mix(in srgb, var(--accent) 70%, transparent);
+}
+.feed-item__body { min-width: 0; flex: 1; }
+.feed-item__head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.feed-item__head strong { font-size: 14px; }
+.feed-verb {
+  font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px;
+  background: var(--surface-2); color: var(--muted); border: 1px solid var(--border);
+}
+.feed-verb--delegate, .feed-verb--delegate_return { color: #c4b5fd; border-color: rgba(139,92,246,.4); background: rgba(139,92,246,.1); }
+.feed-verb--finish { color: #86efac; border-color: rgba(34,197,94,.4); background: rgba(34,197,94,.1); }
+.feed-verb--error { color: #fca5a5; border-color: rgba(239,68,68,.4); background: rgba(239,68,68,.1); }
+.feed-time { margin-left: auto; color: var(--muted); font-size: 12px; white-space: nowrap; }
+.feed-detail { font-size: 13px; color: var(--text); opacity: .9; margin: 5px 0 6px; }
+.feed-mission { font-size: 12px; color: var(--muted); }
+.feed-mission:hover { color: var(--primary-2); }
