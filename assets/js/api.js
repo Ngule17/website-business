@@ -6,6 +6,12 @@
 
   const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 
+  // Prepend shared team memory (company context) to an agent's system prompt.
+  function withMemory(systemPrompt, settings) {
+    const mem = settings && settings.teamMemory ? settings.teamMemory.trim() : "";
+    return mem ? "Company context (shared across the whole team):\n" + mem + "\n\n" + systemPrompt : systemPrompt;
+  }
+
   // Convert our stored conversation into the Anthropic messages format.
   function toApiMessages(history) {
     return history
@@ -26,7 +32,7 @@
       body: JSON.stringify({
         model: settings.model || "claude-sonnet-5",
         max_tokens: 1024,
-        system: agent.systemPrompt,
+        system: withMemory(agent.systemPrompt, settings),
         messages: toApiMessages(history)
       })
     });

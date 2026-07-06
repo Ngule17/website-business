@@ -24,8 +24,10 @@
   }
 
   function systemPrompt(agent, mates) {
+    const mem = Store.get().settings.teamMemory;
+    const preamble = mem && mem.trim() ? "Company context (shared across the whole team):\n" + mem.trim() + "\n\n" : "";
     let s =
-      agent.systemPrompt +
+      preamble + agent.systemPrompt +
       "\n\nYou are operating AUTONOMOUSLY and unattended. You have tools to take real actions. " +
       "Work toward the goal step by step. Use log_decision to make key choices transparent, then act. " +
       "Do NOT ask the user questions — if something needs human judgment or authority, call escalate_to_human " +

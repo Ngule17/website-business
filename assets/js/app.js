@@ -351,6 +351,9 @@
           <label>Workspace name
             <input type="text" id="set-workspace" value="${esc(s.workspaceName)}" />
           </label>
+          <label>Shared team memory <span class="muted small">(company context every agent uses when reasoning live)</span>
+            <textarea id="set-memory" rows="3" placeholder="e.g. We're Acme, a B2B SaaS for dental clinics. Voice: friendly and concise. Never promise delivery dates.">${esc(s.teamMemory)}</textarea>
+          </label>
           <label>Anthropic API key <span class="muted small">(stored only in your browser)</span>
             <input type="password" id="set-apikey" value="${esc(s.apiKey)}" placeholder="sk-ant-…" />
           </label>
@@ -1190,6 +1193,7 @@
     save.addEventListener("click", () => {
       Store.updateSettings({
         workspaceName: document.getElementById("set-workspace").value.trim() || "My Company",
+        teamMemory: document.getElementById("set-memory").value.trim(),
         apiKey: document.getElementById("set-apikey").value.trim(),
         model: document.getElementById("set-model").value,
         executionMode: document.getElementById("set-mode").value
