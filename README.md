@@ -33,6 +33,11 @@ them a goal to pursue autonomously — 24/7.
 - **Team activity feed** — a single, filterable stream of everything your whole
   workforce has done across all missions — decisions, actions, and handoffs —
   with a per-agent contribution leaderboard and links back to each mission.
+- **Mission playbooks** — save a goal + the agent that runs it as a reusable
+  one-click playbook, and re-run it any time from the Missions page.
+- **Import / Export** — back up or move your entire workspace (team, custom
+  agents, playbooks, missions, operations) as a JSON file, and re-import it on
+  another device or share it. Your API key is never included in the export.
 - **Operations dashboard** — one place to review everything your agents
   produced, tabbed by Outbox / CRM / Tasks / Human review.
 - **One-click hiring** — add agents to your workspace; all state persists in

@@ -15,6 +15,7 @@
     customAgents: [], // user-created specialists (same shape as built-in agents, custom:true)
     conversations: {}, // agentId -> [{ role, content, ts }]
     missions: [], // autonomous runs: {id, agentId, goal, status, createdAt, finishedAt, result, log:[]}
+    playbooks: [], // reusable {id, name, goal, agentId, createdAt}
     outbox: [], // {id, agentId, missionId, to, subject, body, ts}
     leads: [], // {id, agentId, missionId, name, company, note, status, ts}
     tasks: [], // {id, agentId, missionId, title, priority, done, ts}
@@ -38,6 +39,7 @@
         customAgents: Array.isArray(p.customAgents) ? p.customAgents : base.customAgents,
         conversations: p.conversations && typeof p.conversations === "object" ? p.conversations : base.conversations,
         missions: Array.isArray(p.missions) ? p.missions : base.missions,
+        playbooks: Array.isArray(p.playbooks) ? p.playbooks : base.playbooks,
         outbox: Array.isArray(p.outbox) ? p.outbox : base.outbox,
         leads: Array.isArray(p.leads) ? p.leads : base.leads,
         tasks: Array.isArray(p.tasks) ? p.tasks : base.tasks,
@@ -167,8 +169,44 @@
       emit();
     },
 
+    /* ---- playbooks (reusable goal + agent) ---- */
+    addPlaybook(rec) {
+      const pb = Object.assign({ id: id("pb"), createdAt: Date.now() }, rec);
+      state.playbooks = [pb].concat(state.playbooks);
+      emit();
+      return pb;
+    },
+    removePlaybook(pid) { state.playbooks = state.playbooks.filter((p) => p.id !== pid); emit(); },
+
     /* ---- settings ---- */
     updateSettings(patch) { state.settings = Object.assign({}, state.settings, patch); emit(); },
+
+    /* ---- import / export (portability & sharing) ---- */
+    exportState() {
+      const clone = JSON.parse(JSON.stringify(state));
+      if (clone.settings) clone.settings.apiKey = ""; // never export the API key
+      return { _app: "ai-workforce", _version: 1, exportedAt: Date.now(), state: clone };
+    },
+    importState(payload) {
+      const incoming = payload && payload.state ? payload.state : payload;
+      if (!incoming || typeof incoming !== "object") throw new Error("Not a valid AI Workforce export file.");
+      const base = defaults();
+      const keepKey = state.settings.apiKey; // don't clobber the local key with an empty one
+      state = {
+        hired: Array.isArray(incoming.hired) ? incoming.hired : base.hired,
+        customAgents: Array.isArray(incoming.customAgents) ? incoming.customAgents : base.customAgents,
+        conversations: incoming.conversations && typeof incoming.conversations === "object" ? incoming.conversations : base.conversations,
+        missions: Array.isArray(incoming.missions) ? incoming.missions : base.missions,
+        playbooks: Array.isArray(incoming.playbooks) ? incoming.playbooks : base.playbooks,
+        outbox: Array.isArray(incoming.outbox) ? incoming.outbox : base.outbox,
+        leads: Array.isArray(incoming.leads) ? incoming.leads : base.leads,
+        tasks: Array.isArray(incoming.tasks) ? incoming.tasks : base.tasks,
+        escalations: Array.isArray(incoming.escalations) ? incoming.escalations : base.escalations,
+        settings: Object.assign(base.settings, incoming.settings || {})
+      };
+      if (!state.settings.apiKey && keepKey) state.settings.apiKey = keepKey;
+      emit();
+    },
 
     /* ---- housekeeping ---- */
     counts() {

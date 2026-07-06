@@ -192,7 +192,9 @@
         </div>
         <div class="assign__examples">
           ${agent.starters.map((s) => `<button class="starter" data-goal="${esc(s)}">${esc(s)}</button>`).join("")}
+          <button class="starter starter--save" id="assign-save-pb" title="Save this goal as a reusable playbook">＋ Save as playbook</button>
         </div>
+        <span class="saved-note" id="pb-note"></span>
         ${recent.length ? `
           <h4 class="assign__sub">Recent missions</h4>
           <div class="mission-list">${recent.map(missionRow).join("")}</div>` : ""}
@@ -369,6 +371,17 @@
           <button class="btn btn-primary" id="save-settings">Save settings</button>
           <span class="saved-note" id="saved-note"></span>
         </div>
+
+        <h2 class="data-h2">Data</h2>
+        <div class="card form">
+          <p class="hint" style="margin:0">Everything lives in this browser. Export a backup you can re-import on another device or share with a teammate. Your team, custom agents, playbooks, missions, and operations are included — <strong>your API key is never exported</strong>.</p>
+          <div class="form-actions">
+            <button class="btn btn-ghost" id="export-btn">⬇ Export workspace</button>
+            <button class="btn btn-ghost" id="import-btn">⬆ Import workspace</button>
+            <input type="file" id="import-file" accept="application/json,.json" style="display:none" />
+            <span class="saved-note" id="data-note"></span>
+          </div>
+        </div>
       </section>`;
   }
 
@@ -389,12 +402,40 @@
       </a>`;
   }
 
+  function playbookSection() {
+    const pbs = Store.get().playbooks;
+    if (!pbs.length) return "";
+    return `
+      <div class="pb-block">
+        <div class="section__head"><h3 class="pb-title">▶ Playbooks</h3><span class="muted small">reusable goals — run in one click</span></div>
+        <div class="grid grid-3">
+          ${pbs.map((pb) => {
+            const a = byId(pb.agentId);
+            return `
+              <article class="card pb-card">
+                <div class="pb-card__head">
+                  ${a ? avatarEl(a, 38) : "🤖"}
+                  <div><strong>${esc(pb.name)}</strong><p class="muted small">${a ? esc(a.name) + " · " + esc(a.role) : "agent removed"}</p></div>
+                </div>
+                <div class="agent-card__actions">
+                  <button class="btn btn-primary small" data-run-pb="${pb.id}" ${a && Store.isHired(a.id) ? "" : "disabled"}>Run</button>
+                  <button class="btn btn-ghost small" data-del-pb="${pb.id}">Delete</button>
+                </div>
+                ${a && !Store.isHired(a.id) ? `<p class="muted small">Hire ${esc(a.name)} to run this.</p>` : ""}
+              </article>`;
+          }).join("")}
+        </div>
+      </div>`;
+  }
+
   function viewMissions() {
     const missions = Store.get().missions;
+    const pb = playbookSection();
     if (missions.length === 0) {
       return `
         <section class="section">
           <h2>Missions</h2>
+          ${pb}
           <div class="empty card">
             <div class="empty__icon">🚀</div>
             <h3>No missions yet</h3>
@@ -405,9 +446,23 @@
     }
     return `
       <section class="section">
+        ${pb}
         <div class="section__head"><h2>Missions</h2><span class="muted">${missions.length} total</span></div>
         <div class="mission-list">${missions.map(missionRow).join("")}</div>
       </section>`;
+  }
+
+  function setupMissions() {
+    app.querySelectorAll("[data-run-pb]").forEach((b) => b.addEventListener("click", () => {
+      const pb = Store.get().playbooks.find((x) => x.id === b.getAttribute("data-run-pb"));
+      if (!pb) return;
+      const mission = Store.createMission(pb.agentId, pb.goal);
+      location.hash = "#/mission/" + mission.id;
+    }));
+    app.querySelectorAll("[data-del-pb]").forEach((b) => b.addEventListener("click", () => {
+      Store.removePlaybook(b.getAttribute("data-del-pb"));
+      route();
+    }));
   }
 
   const KIND_ICON = { status: "•", reason: "💭", decision: "🧭", action: "⚙️", error: "⚠️", finish: "🏁", delegate: "🤝", delegate_return: "📨" };
@@ -807,6 +862,7 @@
     if (page === "settings") setupSettings();
     if (page === "agent") setupAssign(byId(param));
     if (page === "mission") setupMission(param);
+    if (page === "missions") setupMissions();
     if (page === "ops") setupOps();
     if (page === "activity") setupActivity();
     if (page === "create") setupCreate(param);
@@ -842,6 +898,15 @@
     };
     runBtn.addEventListener("click", launch);
     input.addEventListener("keydown", (e) => { if (e.key === "Enter") launch(); });
+
+    const saveBtn = document.getElementById("assign-save-pb");
+    if (saveBtn) saveBtn.addEventListener("click", () => {
+      const goal = input.value.trim();
+      const note = document.getElementById("pb-note");
+      if (!goal) { input.focus(); if (note) { note.textContent = "Type a goal first."; note.className = "saved-note err"; } return; }
+      Store.addPlaybook({ name: goal, goal: goal, agentId: agent.id });
+      if (note) { note.textContent = "✓ Saved to Playbooks"; note.className = "saved-note"; setTimeout(() => (note.textContent = ""), 2500); }
+    });
   }
 
   function setupMission(mid) {
@@ -1036,6 +1101,45 @@
       note.textContent = "✓ Saved";
       setTimeout(() => (note.textContent = ""), 2000);
     });
+
+    // Export: download the workspace as a JSON file.
+    const dataNote = document.getElementById("data-note");
+    const exportBtn = document.getElementById("export-btn");
+    if (exportBtn) exportBtn.addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(Store.exportState(), null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ai-workforce-backup.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      if (dataNote) { dataNote.textContent = "✓ Exported"; dataNote.className = "saved-note"; setTimeout(() => (dataNote.textContent = ""), 2500); }
+    });
+
+    // Import: read a JSON file and replace the workspace.
+    const importBtn = document.getElementById("import-btn");
+    const importFile = document.getElementById("import-file");
+    if (importBtn && importFile) {
+      importBtn.addEventListener("click", () => importFile.click());
+      importFile.addEventListener("change", () => {
+        const file = importFile.files && importFile.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            Store.importState(JSON.parse(reader.result));
+            location.hash = "#/workspace";
+            route();
+          } catch (e) {
+            if (dataNote) { dataNote.textContent = "⚠ " + (e.message || "Invalid file"); dataNote.className = "saved-note err"; }
+          }
+          importFile.value = "";
+        };
+        reader.readAsText(file);
+      });
+    }
   }
 
   /* ---------- boot ---------- */

@@ -637,3 +637,15 @@ main { min-height: 70vh; padding-bottom: 60px; }
 .org-node__actions { display: flex; gap: 8px; margin-top: 12px; }
 .org-node__actions .btn { flex: 1; }
 .org-node__actions .btn[data-hire] { flex: 0 0 auto; }
+
+/* ============ Playbooks & data ============ */
+.pb-block { margin-bottom: 30px; }
+.pb-title { font-size: 18px; margin: 0; }
+.pb-card { display: flex; flex-direction: column; gap: 12px; }
+.pb-card__head { display: flex; align-items: center; gap: 12px; }
+.pb-card__head strong { font-size: 15px; display: block; }
+.pb-card .agent-card__actions { margin-top: auto; }
+.pb-card .btn[disabled] { opacity: .45; pointer-events: none; }
+.starter--save { border-style: dashed; color: var(--primary-2); font-weight: 600; }
+.starter--save:hover { border-color: var(--primary); }
+.data-h2 { margin: 34px 0 18px; font-size: 22px; }
