@@ -2,7 +2,7 @@
 (function () {
 "use strict";
 
-const { LEVELS, VOCAB, GRAMMAR, SENTENCES } = window.DUTCH;
+const { LEVELS, THEMES, VOCAB, GRAMMAR, SENTENCES } = window.DUTCH;
 const app = document.getElementById("app");
 
 /* ---------------- Speech (Dutch pronunciation) ---------------- */
@@ -57,6 +57,22 @@ function esc(s) {
 function poolFor(level) {
   return VOCAB.filter(v => v.level === level);
 }
+function poolForTheme(themeId) {
+  return VOCAB.filter(v => v.theme === themeId);
+}
+function themeById(id) {
+  return THEMES.find(t => t.id === id);
+}
+function themeName(id) {
+  const t = themeById(id);
+  return t ? t.en : id;
+}
+function levelRange(pool) {
+  const order = LEVELS.map(l => l.id);
+  const present = [...new Set(pool.map(v => v.level))].sort((a, b) => order.indexOf(a) - order.indexOf(b));
+  if (!present.length) return "";
+  return present.length === 1 ? present[0] : present[0] + "–" + present[present.length - 1];
+}
 function speakerBtn(text) {
   if (!Speech.available) return "";
   return `<button class="spk" data-say="${esc(text)}" title="Listen" aria-label="Listen">🔊</button>`;
@@ -77,6 +93,7 @@ function normalize(s) {
 const routes = {
   "": renderDashboard,
   dashboard: renderDashboard,
+  themes: renderThemes,
   learn: renderLearn,
   grammar: renderGrammar,
   practice: renderPractice,
@@ -164,6 +181,7 @@ function renderDashboard() {
 
   // quick actions
   const cta = el("div", "cta-row");
+  cta.appendChild(actionCard("🗂️", "Themes", "Learn topic by topic", () => go("themes")));
   cta.appendChild(actionCard("🃏", "Flashcards", "Spaced-repetition vocab", () => go("learn")));
   cta.appendChild(actionCard("📖", "Grammar", "Lessons A1 → C2", () => go("grammar")));
   cta.appendChild(actionCard("✍️", "Practice", "Quiz & translation", () => go("practice")));
@@ -192,18 +210,17 @@ function renderLearn() {
   const host = el("div", "flashhost");
   wrap.appendChild(host);
   app.appendChild(wrap);
-  startSession(host, Store.state.activeLevel);
+  startSession(host, poolFor(Store.state.activeLevel), Store.state.activeLevel);
 }
 
-function startSession(host, level) {
-  const pool = poolFor(level);
+function startSession(host, pool, label) {
   const queue = Store.buildQueue(pool, { newLimit: 12 });
   host.innerHTML = "";
 
   if (queue.length === 0) {
     host.appendChild(el("div", "empty",
-      `<div class="big">🎉</div><p>Nothing due for <b>${level}</b> right now. Great job!</p>
-       <p class="sub">Come back later, or pick another level above.</p>`));
+      `<div class="big">🎉</div><p>Nothing due for <b>${esc(label)}</b> right now. Great job!</p>
+       <p class="sub">Come back later, or pick another set to study.</p>`));
     return;
   }
 
@@ -218,7 +235,7 @@ function startSession(host, level) {
   function draw() {
     const item = queue[idx];
     prog.innerHTML = `<div class="track sm"><div class="fill" style="width:${Math.round((idx / total) * 100)}%"></div></div>
-      <div class="fp-meta">${idx + 1} / ${total} · <span class="chip">${item.theme}</span></div>`;
+      <div class="fp-meta">${idx + 1} / ${total} · <span class="chip">${esc(themeName(item.theme))}</span> · ${item.level}</div>`;
     const isNew = !(Store.getCard(item.nl) || {}).learned;
     card.className = "flashcard";
     card.innerHTML = `
@@ -271,12 +288,124 @@ function startSession(host, level) {
         <button class="btn primary" id="again">Study more</button>
         <button class="btn" id="dash">Dashboard</button>
       </div></div>`;
-    $("#again", host).onclick = () => startSession(host, level);
+    $("#again", host).onclick = () => startSession(host, pool, label);
     $("#dash", host).onclick = () => go("dashboard");
   }
 
   card.onclick = () => { if (!flipped) flip(); };
   draw();
+}
+
+/* ---------------- Themes (teacher-led topic units) ---------------- */
+function renderThemes(id) {
+  if (id) return renderThemeLesson(id);
+  const wrap = el("div", "view");
+  wrap.appendChild(el("h1", null, "Themes"));
+  wrap.appendChild(el("p", "sub", "Learn Dutch the way a teacher would organise it — one topic at a time. Each theme has an introduction, key phrases, vocabulary and its own practice."));
+  const grid = el("div", "themegrid");
+  THEMES.forEach(t => {
+    const pool = poolForTheme(t.id);
+    const st = Store.stats(pool);
+    const p = st.total ? Math.round((st.learned / st.total) * 100) : 0;
+    const card = el("div", "themecard");
+    card.innerHTML = `
+      <div class="tc-ic">${t.icon}</div>
+      <div class="tc-body">
+        <div class="tc-en">${esc(t.en)}</div>
+        <div class="tc-nl">${esc(t.nl)}</div>
+        <div class="tc-meta">${st.total} words · ${levelRange(pool)} ${st.learned ? `· <span class="tc-learned">${p}% learned</span>` : ""}</div>
+        <div class="track sm"><div class="fill" style="width:${p}%"></div></div>
+      </div>`;
+    card.onclick = () => go("themes/" + t.id);
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);
+  app.appendChild(wrap);
+}
+
+function renderThemeLesson(id) {
+  const t = themeById(id);
+  if (!t) return renderThemes();
+  const pool = poolForTheme(id).slice().sort((a, b) => {
+    const order = LEVELS.map(l => l.id);
+    return order.indexOf(a.level) - order.indexOf(b.level);
+  });
+  const wrap = el("div", "view");
+  const back = el("button", "backlink", "‹ All themes");
+  back.onclick = () => go("themes");
+  wrap.appendChild(back);
+
+  wrap.appendChild(el("div", "theme-head",
+    `<span class="th-ic">${t.icon}</span><div><h1>${esc(t.en)}</h1><div class="th-nl">${esc(t.nl)}</div></div>`));
+
+  // Teacher's introduction
+  const intro = el("div", "teacher-note");
+  intro.innerHTML = `<div class="tn-label">👩‍🏫 Your teacher says</div><p>${t.intro}</p>`;
+  wrap.appendChild(intro);
+
+  // Action buttons
+  const actions = el("div", "theme-actions");
+  const studyBtn = el("button", "btn primary", "🃏 Study these words");
+  const quizBtn = el("button", "btn", "✍️ Quick quiz");
+  actions.append(studyBtn, quizBtn);
+  wrap.appendChild(actions);
+  const sessionHost = el("div", "theme-session");
+  wrap.appendChild(sessionHost);
+  studyBtn.onclick = () => { sessionHost.scrollIntoView({ behavior: "smooth", block: "start" }); startSession(sessionHost, pool, t.en); };
+  quizBtn.onclick = () => { sessionHost.scrollIntoView({ behavior: "smooth", block: "start" }); practiceMC(sessionHost, pool, t.en); };
+
+  // Key phrases
+  if (t.phrases && t.phrases.length) {
+    wrap.appendChild(el("h2", "sec", "Key phrases"));
+    const pl = el("div", "phraselist");
+    t.phrases.forEach(ph => {
+      const row = el("div", "phraserow");
+      row.innerHTML = `<div class="ph-nl">${esc(ph.nl)} ${speakerBtn(ph.nl)}</div><div class="ph-en">${esc(ph.en)}</div>`;
+      bindSpeakers(row);
+      pl.appendChild(row);
+    });
+    wrap.appendChild(pl);
+  }
+
+  // Related grammar
+  const rel = GRAMMAR.filter(g => g.theme === id);
+  if (rel.length) {
+    wrap.appendChild(el("h2", "sec", "Related grammar"));
+    const list = el("div", "lessonlist");
+    rel.forEach(g => {
+      const done = Store.state.grammarDone[g.id];
+      const row = el("div", "lessonrow");
+      row.innerHTML = `<div class="lr-title">${done ? "✅ " : "📖 "}${esc(g.title)} <span class="lr-lvl">${g.level}</span></div><div class="lr-go">›</div>`;
+      row.onclick = () => go("grammar/" + g.id);
+      list.appendChild(row);
+    });
+    wrap.appendChild(list);
+  }
+
+  // Vocabulary, grouped by level
+  wrap.appendChild(el("h2", "sec", `Vocabulary (${pool.length} words)`));
+  const vlist = el("div", "vocablist");
+  let currentLevel = null;
+  pool.forEach(v => {
+    if (v.level !== currentLevel) {
+      currentLevel = v.level;
+      vlist.appendChild(el("div", "vlevel-head", currentLevel));
+    }
+    const learned = (Store.getCard(v.nl) || {}).learned;
+    const row = el("div", "vrow");
+    row.innerHTML = `
+      <div class="v-main">
+        <div class="v-nl">${v.art ? `<span class="art">${v.art}</span> ` : ""}${esc(v.nl)} ${speakerBtn(v.nl)}
+          ${learned ? '<span class="v-learned" title="learned">●</span>' : ""}</div>
+        <div class="v-en">${esc(v.en)}</div>
+        <div class="v-ex">“${esc(v.ex)}” — ${esc(v.exEn)}</div>
+      </div>
+      <div class="v-badges"><span class="badge lv">${v.level}</span></div>`;
+    bindSpeakers(row);
+    vlist.appendChild(row);
+  });
+  wrap.appendChild(vlist);
+  app.appendChild(wrap);
 }
 
 /* ---------------- Grammar ---------------- */
@@ -311,6 +440,11 @@ function renderGrammarLesson(id) {
   wrap.appendChild(back);
   wrap.appendChild(el("div", "levelchip", g.level));
   wrap.appendChild(el("h1", null, g.title));
+  if (g.tip) {
+    const tip = el("div", "teacher-note");
+    tip.innerHTML = `<div class="tn-label">👩‍🏫 Teacher's tip</div><p>${g.tip}</p>`;
+    wrap.appendChild(tip);
+  }
   const body = el("div", "lesson-body");
   body.innerHTML = g.body;
   wrap.appendChild(body);
@@ -373,7 +507,7 @@ function renderPractice(mode) {
   wrap.appendChild(levelBar(() => renderPractice(mode)));
 
   const modes = el("div", "modegrid");
-  modes.appendChild(modeCard("🔤", "Multiple choice", "Pick the right translation", () => practiceMC(host)));
+  modes.appendChild(modeCard("🔤", "Multiple choice", "Pick the right translation", () => practiceMC(host, poolFor(Store.state.activeLevel), Store.state.activeLevel)));
   modes.appendChild(modeCard("⌨️", "Type the word", "Recall & spell in Dutch", () => practiceType(host)));
   modes.appendChild(modeCard("🧩", "Sentence order", "Rebuild the scrambled sentence", () => practiceOrder(host)));
   if (Speech.available)
@@ -402,14 +536,15 @@ function roundHeader(host, title) {
 }
 
 // Multiple choice: NL word -> choose EN
-function practiceMC(host) {
-  const pool = poolFor(Store.state.activeLevel);
-  if (pool.length < 4) return roundHeader(host, "Need more words at this level.");
+function practiceMC(host, pool, label) {
+  pool = pool || poolFor(Store.state.activeLevel);
+  label = label || Store.state.activeLevel;
+  if (pool.length < 4) return roundHeader(host, "Need at least 4 words to make a quiz.");
   const questions = shuffle(pool).slice(0, Math.min(10, pool.length));
   let i = 0, score = 0;
-  const body = roundHeader(host, "Multiple choice — " + Store.state.activeLevel);
+  const body = roundHeader(host, "Multiple choice — " + label);
   function draw() {
-    if (i >= questions.length) return roundFinish(body, score, questions.length, () => practiceMC(host));
+    if (i >= questions.length) return roundFinish(body, score, questions.length, () => practiceMC(host, pool, label));
     const item = questions[i];
     const distract = shuffle(pool.filter(p => p.nl !== item.nl)).slice(0, 3);
     const options = shuffle([item, ...distract]);
@@ -604,9 +739,9 @@ function renderVocab() {
   search.placeholder = "Search Dutch or English…";
   const levelSel = el("select", "vsel");
   levelSel.innerHTML = `<option value="">All levels</option>` + LEVELS.map(L => `<option>${L.id}</option>`).join("");
-  const themes = [...new Set(VOCAB.map(v => v.theme))].sort();
   const themeSel = el("select", "vsel");
-  themeSel.innerHTML = `<option value="">All themes</option>` + themes.map(t => `<option>${esc(t)}</option>`).join("");
+  themeSel.innerHTML = `<option value="">All themes</option>` +
+    THEMES.filter(t => poolForTheme(t.id).length).map(t => `<option value="${t.id}">${esc(t.en)}</option>`).join("");
   controls.append(search, levelSel, themeSel);
   wrap.appendChild(controls);
 
@@ -631,7 +766,7 @@ function renderVocab() {
           <div class="v-en">${esc(v.en)}</div>
           <div class="v-ex">“${esc(v.ex)}” — ${esc(v.exEn)}</div>
         </div>
-        <div class="v-badges"><span class="badge lv">${v.level}</span><span class="badge th">${esc(v.theme)}</span></div>`;
+        <div class="v-badges"><span class="badge lv">${v.level}</span><span class="badge th">${esc(themeName(v.theme))}</span></div>`;
       bindSpeakers(row);
       list.appendChild(row);
     });

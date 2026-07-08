@@ -23,10 +23,11 @@ python3 -m http.server 8000
 | Section | What it does |
 |---|---|
 | **Dashboard** | Streak, XP, daily goal, and per-level progress (A1–C2). |
+| **Themes** | 24 topic units (Greetings, Food, Travel, Work, Society, Idioms…), each taught like a teacher: an introduction in a teaching voice, key phrases, related grammar, and vocabulary grouped by level — with "Study these words" and "Quick quiz" built in. |
 | **Flashcards** | Spaced-repetition (SM-2) vocabulary. Grade each card *Again / Hard / Good / Easy* and the scheduler decides when you see it next. |
-| **Grammar** | 14 lessons from *de/het* and word order up to relative clauses, the passive, and C2 register — each with a self-check quiz. |
+| **Grammar** | 20 lessons from *de/het* and word order up to relative clauses, the passive, and C2 register — each opens with a **teacher's tip** and ends with a self-check quiz. |
 | **Practice** | Five modes: multiple choice, type-the-word, sentence scramble, listening/dictation, and EN→NL translation. |
-| **Vocabulary** | Browse/search all 137 seed words, filter by level & theme, hear each one. |
+| **Vocabulary** | Browse/search 380+ words, filter by level & theme, hear each one. |
 
 ## Pronunciation
 
@@ -57,13 +58,16 @@ Safari a Dutch voice is available by default.
 ## Extending the content
 
 All curriculum lives in `js/data.js` as plain arrays:
-- `VOCAB` — words `{nl, en, level, theme, art, pos, ex, exEn}`
-- `GRAMMAR` — lessons with an HTML `body` and a `quiz`
-- `SENTENCES` — sentence bank for translation/dictation
+- `THEMES` — topic units `{id, icon, en, nl, intro, phrases[]}` (the teacher's syllabus)
+- `VOCAB` — words `{nl, en, level, theme, art, pos, ex, exEn}` (theme = a THEME id)
+- `GRAMMAR` — lessons with a `tip`, an HTML `body`, a `theme` and a `quiz`
+- `SENTENCES` — sentence bank for translation/dictation, tagged by theme
 
 Add entries there and they appear automatically — the engine (`store.js`,
-`app.js`) is content-agnostic. This seed set is a solid foundation; you can grow
-it toward the several-thousand-word vocabulary a real C1/C2 needs.
+`app.js`) is content-agnostic. To add a whole new topic, add one entry to
+`THEMES` and tag words with its `id`. The current set (24 themes, 380+ words,
+20 grammar lessons) is a solid foundation; keep growing it toward the
+several-thousand-word vocabulary a real C1/C2 needs.
 
 ## Files
 

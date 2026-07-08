@@ -118,6 +118,41 @@ h2.sec{ font-size:15px; text-transform:uppercase; letter-spacing:1px; color:var(
 .empty{ text-align:center; padding:40px 16px; color:var(--muted); }
 .empty .big{ font-size:52px; } .big{ font-size:48px; }
 
+/* Themes */
+.themegrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; }
+.themecard{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; display:flex; gap:14px; align-items:flex-start; cursor:pointer; transition:transform .12s,border-color .12s; }
+.themecard:hover{ transform:translateY(-2px); border-color:var(--brand); }
+.tc-ic{ font-size:30px; line-height:1; flex-shrink:0; }
+.tc-body{ flex:1; min-width:0; }
+.tc-en{ font-weight:700; font-size:15px; }
+.tc-nl{ font-size:12px; color:var(--muted); font-style:italic; margin-bottom:8px; }
+.tc-meta{ font-size:11px; color:var(--muted); margin-bottom:8px; }
+.tc-learned{ color:var(--ok); font-weight:700; }
+
+.theme-head{ display:flex; gap:14px; align-items:center; margin:6px 0 14px; }
+.theme-head .th-ic{ font-size:40px; line-height:1; }
+.theme-head h1{ margin:0; }
+.th-nl{ color:var(--muted); font-style:italic; font-size:15px; }
+
+/* Teacher note callout (theme intros & grammar tips) */
+.teacher-note{ background:linear-gradient(135deg, rgba(255,122,26,.10), rgba(255,160,77,.05));
+  border:1px solid var(--brand); border-left-width:4px; border-radius:14px; padding:14px 16px; margin:6px 0 16px; }
+.teacher-note p{ margin:0; }
+.teacher-note b{ color:var(--brand2); }
+.tn-label{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--brand); margin-bottom:6px; }
+
+.theme-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
+.theme-session:empty{ display:none; }
+.theme-session{ margin:14px 0; }
+
+.phraselist{ display:flex; flex-direction:column; gap:8px; }
+.phraserow{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
+.ph-nl{ font-weight:700; font-size:16px; }
+.ph-en{ color:var(--muted); font-size:13px; margin-top:2px; }
+
+.vlevel-head{ font-size:12px; font-weight:800; color:var(--brand); letter-spacing:1px; margin:14px 0 4px; }
+.lr-lvl{ font-size:11px; font-weight:700; color:var(--muted); background:var(--surface2); padding:1px 7px; border-radius:8px; margin-left:6px; }
+
 /* Grammar */
 .lessonlist{ display:flex; flex-direction:column; gap:8px; }
 .lessonrow{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
