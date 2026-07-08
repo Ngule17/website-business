@@ -12,6 +12,7 @@ const DEFAULT_STATE = {
   reviewedToday: 0,
   reviewedDay: null,
   grammarDone: {},      // grammar id -> true
+  readingsDone: {},     // reading id -> true
   activeLevel: "A1",
   totalReviews: 0,
 };
@@ -123,6 +124,14 @@ const Store = {
   markGrammar(id) {
     this.state.grammarDone[id] = true;
     this.addXp(15);
+    this.registerStudy();
+    this.save();
+  },
+
+  markReading(id) {
+    const fresh = !this.state.readingsDone[id];
+    this.state.readingsDone[id] = true;
+    this.addXp(fresh ? 25 : 5);
     this.registerStudy();
     this.save();
   },

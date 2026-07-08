@@ -30,9 +30,12 @@ button{ font-family:inherit; cursor:pointer; }
 .brand .flag i{ flex:1; }
 .brand .flag .r{ background:#AE1C28; } .brand .flag .w{ background:#fff; } .brand .flag .b{ background:var(--nl); }
 .brand small{ color:var(--muted); font-weight:600; font-size:11px; display:block; }
+.brand{ flex-shrink:0; }
+nav{ display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; }
+nav::-webkit-scrollbar{ display:none; }
 .navlink{
   background:transparent; border:none; color:var(--muted); font-weight:600;
-  padding:8px 12px; border-radius:10px; font-size:14px;
+  padding:8px 12px; border-radius:10px; font-size:14px; white-space:nowrap;
 }
 .navlink:hover{ color:var(--text); background:var(--surface2); }
 .navlink.active{ color:var(--brand); background:var(--surface2); }
@@ -152,6 +155,23 @@ h2.sec{ font-size:15px; text-transform:uppercase; letter-spacing:1px; color:var(
 
 .vlevel-head{ font-size:12px; font-weight:800; color:var(--brand); letter-spacing:1px; margin:14px 0 4px; }
 .lr-lvl{ font-size:11px; font-weight:700; color:var(--muted); background:var(--surface2); padding:1px 7px; border-radius:8px; margin-left:6px; }
+.lr-sub{ font-size:12px; color:var(--muted); font-weight:500; margin-top:3px; }
+
+/* Reading */
+.reading-tags{ display:flex; gap:8px; align-items:center; margin-bottom:6px; }
+.reading-toolbar{ display:flex; gap:10px; margin:12px 0; }
+.reading-text{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; }
+.reading-par{ margin:0 0 16px; font-size:17px; line-height:1.75; max-width:62ch; }
+.reading-par:last-child{ margin-bottom:0; }
+.reading-par .spk{ vertical-align:baseline; }
+.glossary{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:4px 16px; margin-top:14px; }
+.glossary summary{ cursor:pointer; font-weight:700; padding:12px 0; list-style:none; }
+.glossary summary::-webkit-details-marker{ display:none; }
+.glossary summary::before{ content:"▸ "; color:var(--brand); }
+.glossary[open] summary::before{ content:"▾ "; }
+.glosslist{ display:flex; flex-direction:column; gap:6px; padding-bottom:14px; }
+.glossrow{ display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-top:1px solid var(--line); }
+.gl-nl{ font-weight:700; } .gl-en{ color:var(--muted); text-align:right; }
 
 /* Grammar */
 .lessonlist{ display:flex; flex-direction:column; gap:8px; }
@@ -230,9 +250,13 @@ h2.sec{ font-size:15px; text-transform:uppercase; letter-spacing:1px; color:var(
   .statgrid{ grid-template-columns:repeat(2,1fr); }
   .levelgrid{ grid-template-columns:1fr; }
   .cta-row{ grid-template-columns:1fr 1fr; }
-  .navlink span.lbl{ display:none; }
+  .navlink{ padding:8px 9px; font-size:13px; }
+  .brand small{ display:none; }
   h1{ font-size:23px; }
   .fc-word{ font-size:27px; }
+}
+@media (max-width:520px){
+  .brand span:not(.flag){ display:none; }
 }
 @media (max-width:420px){
   .cta-row{ grid-template-columns:1fr; }

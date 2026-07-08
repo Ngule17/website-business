@@ -2,7 +2,7 @@
 (function () {
 "use strict";
 
-const { LEVELS, THEMES, VOCAB, GRAMMAR, SENTENCES } = window.DUTCH;
+const { LEVELS, THEMES, VOCAB, GRAMMAR, SENTENCES, READINGS } = window.DUTCH;
 const app = document.getElementById("app");
 
 /* ---------------- Speech (Dutch pronunciation) ---------------- */
@@ -94,6 +94,7 @@ const routes = {
   "": renderDashboard,
   dashboard: renderDashboard,
   themes: renderThemes,
+  read: renderReading,
   learn: renderLearn,
   grammar: renderGrammar,
   practice: renderPractice,
@@ -184,6 +185,7 @@ function renderDashboard() {
   cta.appendChild(actionCard("🗂️", "Themes", "Learn topic by topic", () => go("themes")));
   cta.appendChild(actionCard("🃏", "Flashcards", "Spaced-repetition vocab", () => go("learn")));
   cta.appendChild(actionCard("📖", "Grammar", "Lessons A1 → C2", () => go("grammar")));
+  cta.appendChild(actionCard("📰", "Reading", "Graded texts + questions", () => go("read")));
   cta.appendChild(actionCard("✍️", "Practice", "Quiz & translation", () => go("practice")));
   cta.appendChild(actionCard("🔎", "Vocabulary", "Browse & listen", () => go("vocab")));
   wrap.appendChild(cta);
@@ -406,6 +408,92 @@ function renderThemeLesson(id) {
   });
   wrap.appendChild(vlist);
   app.appendChild(wrap);
+}
+
+/* ---------------- Reading (graded texts + comprehension) ---------------- */
+function renderReading(id) {
+  if (id) return renderReadingPassage(id);
+  const wrap = el("div", "view");
+  wrap.appendChild(el("h1", null, "Reading"));
+  wrap.appendChild(el("p", "sub", "Extended texts that grow with you, from a simple day out to argumentative essays. Read for gist first, then use the glossary and answer the comprehension questions. This is how you build real C-level fluency."));
+  LEVELS.forEach(L => {
+    const items = READINGS.filter(r => r.level === L.id);
+    if (!items.length) return;
+    wrap.appendChild(el("h2", "sec", L.name));
+    const list = el("div", "lessonlist");
+    items.forEach(r => {
+      const done = Store.state.readingsDone[r.id];
+      const wc = r.text.join(" ").split(/\s+/).length;
+      const row = el("div", "lessonrow");
+      row.innerHTML = `<div class="lr-title">${done ? "✅ " : "📰 "}${esc(r.title)}
+        <div class="lr-sub">${esc(r.titleEn)} · ${wc} words · ${esc(themeName(r.theme))}</div></div><div class="lr-go">›</div>`;
+      row.onclick = () => go("read/" + r.id);
+      list.appendChild(row);
+    });
+    wrap.appendChild(list);
+  });
+  app.appendChild(wrap);
+}
+
+function renderReadingPassage(id) {
+  const r = READINGS.find(x => x.id === id);
+  if (!r) return renderReading();
+  const wrap = el("div", "view");
+  const back = el("button", "backlink", "‹ All readings");
+  back.onclick = () => go("read");
+  wrap.appendChild(back);
+  wrap.appendChild(el("div", "reading-tags",
+    `<span class="levelchip">${r.level}</span> <span class="chip">${esc(themeName(r.theme))}</span>`));
+  wrap.appendChild(el("h1", null, r.title));
+  wrap.appendChild(el("div", "th-nl", esc(r.titleEn)));
+
+  const intro = el("div", "teacher-note");
+  intro.innerHTML = `<div class="tn-label">👩‍🏫 Before you read</div><p>${esc(r.intro)}</p>`;
+  wrap.appendChild(intro);
+
+  // Read-aloud toolbar
+  if (Speech.available) {
+    const bar = el("div", "reading-toolbar");
+    const play = el("button", "btn primary", "▶ Read aloud");
+    const stop = el("button", "btn ghost", "■ Stop");
+    play.onclick = () => Speech.say(r.text.join(" "));
+    stop.onclick = () => speechSynthesis.cancel();
+    bar.append(play, stop);
+    wrap.appendChild(bar);
+  }
+
+  // The text
+  const text = el("div", "reading-text");
+  r.text.forEach(par => {
+    const p = el("p", "reading-par");
+    p.innerHTML = `${esc(par)} ${speakerBtn(par)}`;
+    bindSpeakers(p);
+    text.appendChild(p);
+  });
+  wrap.appendChild(text);
+
+  // Glossary (collapsible)
+  if (r.glossary && r.glossary.length) {
+    const det = document.createElement("details");
+    det.className = "glossary";
+    det.innerHTML = `<summary>📖 Glossary (${r.glossary.length} words)</summary>`;
+    const gl = el("div", "glosslist");
+    r.glossary.forEach(g => {
+      const row = el("div", "glossrow");
+      row.innerHTML = `<span class="gl-nl">${esc(g.nl)} ${speakerBtn(g.nl)}</span><span class="gl-en">${esc(g.en)}</span>`;
+      bindSpeakers(row);
+      gl.appendChild(row);
+    });
+    det.appendChild(gl);
+    wrap.appendChild(det);
+  }
+
+  // Comprehension quiz
+  wrap.appendChild(el("h2", "sec", "Comprehension"));
+  const quizHost = el("div", "quiz");
+  wrap.appendChild(quizHost);
+  app.appendChild(wrap);
+  runQuiz(quizHost, r.questions, () => Store.markReading(r.id));
 }
 
 /* ---------------- Grammar ---------------- */

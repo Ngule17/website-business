@@ -608,6 +608,69 @@ const VOCAB = [
   { nl:"bijdragen", en:"to contribute", level:"C1", theme:"verbs", art:"", pos:"verb", ex:"Iedereen draagt bij aan het project.", exEn:"Everyone contributes to the project." },
   { nl:"vergen", en:"to demand / require", level:"C2", theme:"verbs", art:"", pos:"verb", ex:"Dit vergt geduld en precisie.", exEn:"This requires patience and precision." },
   { nl:"nuanceren", en:"to nuance / qualify", level:"C2", theme:"verbs", art:"", pos:"verb", ex:"Ik wil die stelling nuanceren.", exEn:"I want to qualify that statement." },
+
+  // ================= DEPTH: higher-register additions =================
+  // society & politics
+  { nl:"vluchteling", en:"refugee", level:"B2", theme:"society", art:"de", pos:"noun", ex:"De stad ving veel vluchtelingen op.", exEn:"The city took in many refugees." },
+  { nl:"integratie", en:"integration", level:"B2", theme:"society", art:"de", pos:"noun", ex:"Integratie kost tijd en moeite.", exEn:"Integration takes time and effort." },
+  { nl:"discriminatie", en:"discrimination", level:"B2", theme:"society", art:"de", pos:"noun", ex:"Discriminatie is bij wet verboden.", exEn:"Discrimination is prohibited by law." },
+  { nl:"welvaart", en:"prosperity", level:"C1", theme:"society", art:"de", pos:"noun", ex:"De welvaart is ongelijk verdeeld.", exEn:"Prosperity is unevenly distributed." },
+  { nl:"armoede", en:"poverty", level:"B2", theme:"society", art:"de", pos:"noun", ex:"Veel gezinnen leven in armoede.", exEn:"Many families live in poverty." },
+  { nl:"wetgeving", en:"legislation", level:"C1", theme:"society", art:"de", pos:"noun", ex:"De nieuwe wetgeving gaat in januari in.", exEn:"The new legislation takes effect in January." },
+  { nl:"grondwet", en:"constitution", level:"C1", theme:"society", art:"de", pos:"noun", ex:"Dat recht staat in de grondwet.", exEn:"That right is in the constitution." },
+  { nl:"vrijheid", en:"freedom", level:"B2", theme:"society", art:"de", pos:"noun", ex:"Vrijheid van meningsuiting is fundamenteel.", exEn:"Freedom of speech is fundamental." },
+  { nl:"verantwoording", en:"accountability", level:"C1", theme:"society", art:"de", pos:"noun", ex:"De minister moet verantwoording afleggen.", exEn:"The minister must account for it." },
+  { nl:"draagvlak", en:"public support / buy-in", level:"C1", theme:"society", art:"het", pos:"noun", ex:"Voor dit plan is weinig draagvlak.", exEn:"There is little support for this plan." },
+  // work & career
+  { nl:"loopbaan", en:"career", level:"B2", theme:"work", art:"de", pos:"noun", ex:"Zij maakte snel carrière in haar loopbaan.", exEn:"She advanced quickly in her career." },
+  { nl:"vaardigheid", en:"skill", level:"B2", theme:"work", art:"de", pos:"noun", ex:"Communicatie is een belangrijke vaardigheid.", exEn:"Communication is an important skill." },
+  { nl:"deskundig", en:"expert / competent", level:"C1", theme:"work", art:"", pos:"adj", ex:"Zij gaf een deskundig advies.", exEn:"She gave expert advice." },
+  { nl:"werkdruk", en:"workload / work pressure", level:"B2", theme:"work", art:"de", pos:"noun", ex:"De werkdruk is de laatste tijd hoog.", exEn:"The workload has been high lately." },
+  { nl:"functioneren", en:"to function / perform", level:"C1", theme:"work", art:"", pos:"verb", ex:"Het team functioneert uitstekend.", exEn:"The team performs excellently." },
+  // business & economy
+  { nl:"rendement", en:"return / yield", level:"C1", theme:"business", art:"het", pos:"noun", ex:"Het rendement op de investering is laag.", exEn:"The return on the investment is low." },
+  { nl:"aandeel", en:"share (stock)", level:"C1", theme:"business", art:"het", pos:"noun", ex:"De aandelen zijn in waarde gedaald.", exEn:"The shares have dropped in value." },
+  { nl:"belasting", en:"tax", level:"B2", theme:"business", art:"de", pos:"noun", ex:"We betalen veel belasting.", exEn:"We pay a lot of tax." },
+  { nl:"lening", en:"loan", level:"B2", theme:"business", art:"de", pos:"noun", ex:"Ze sloten een lening af voor het huis.", exEn:"They took out a loan for the house." },
+  { nl:"consument", en:"consumer", level:"B2", theme:"business", art:"de", pos:"noun", ex:"De consument wordt kritischer.", exEn:"The consumer is becoming more critical." },
+  { nl:"schuld", en:"debt / guilt", level:"B2", theme:"business", art:"de", pos:"noun", ex:"Het land heeft een hoge schuld.", exEn:"The country has a high debt." },
+  // nature & environment
+  { nl:"opwarming", en:"(global) warming", level:"B2", theme:"nature", art:"de", pos:"noun", ex:"De opwarming van de aarde versnelt.", exEn:"Global warming is accelerating." },
+  { nl:"uitstoot", en:"emissions", level:"B2", theme:"nature", art:"de", pos:"noun", ex:"De uitstoot van CO2 moet omlaag.", exEn:"CO2 emissions must come down." },
+  { nl:"hernieuwbaar", en:"renewable", level:"C1", theme:"nature", art:"", pos:"adj", ex:"Wind is een hernieuwbare energiebron.", exEn:"Wind is a renewable energy source." },
+  { nl:"grondstof", en:"raw material", level:"C1", theme:"nature", art:"de", pos:"noun", ex:"Grondstoffen worden schaarser.", exEn:"Raw materials are becoming scarcer." },
+  { nl:"ecosysteem", en:"ecosystem", level:"C1", theme:"nature", art:"het", pos:"noun", ex:"Het hele ecosysteem raakt verstoord.", exEn:"The whole ecosystem gets disrupted." },
+  // technology & media
+  { nl:"kunstmatige intelligentie", en:"artificial intelligence", level:"B2", theme:"tech", art:"de", pos:"noun", ex:"Kunstmatige intelligentie verandert de arbeidsmarkt.", exEn:"AI is changing the job market." },
+  { nl:"gegevens", en:"data", level:"B2", theme:"tech", art:"de", pos:"noun", ex:"Je gegevens worden opgeslagen.", exEn:"Your data is stored." },
+  { nl:"privacy", en:"privacy", level:"B2", theme:"tech", art:"de", pos:"noun", ex:"Privacy is een grondrecht.", exEn:"Privacy is a fundamental right." },
+  { nl:"algoritme", en:"algorithm", level:"C1", theme:"tech", art:"het", pos:"noun", ex:"Het algoritme bepaalt wat je ziet.", exEn:"The algorithm decides what you see." },
+  { nl:"toepassing", en:"application / use", level:"C1", theme:"tech", art:"de", pos:"noun", ex:"Deze technologie heeft veel toepassingen.", exEn:"This technology has many applications." },
+  // emotions & personality (nuanced)
+  { nl:"verontwaardigd", en:"indignant", level:"C1", theme:"emotions", art:"", pos:"adj", ex:"Ze was verontwaardigd over de opmerking.", exEn:"She was indignant at the remark." },
+  { nl:"onverschillig", en:"indifferent", level:"C1", theme:"emotions", art:"", pos:"adj", ex:"Hij bleef onverschillig onder de kritiek.", exEn:"He remained indifferent to the criticism." },
+  { nl:"terughoudend", en:"reticent / reserved", level:"C1", theme:"emotions", art:"", pos:"adj", ex:"Ze is terughoudend met complimenten.", exEn:"She is reserved with compliments." },
+  { nl:"beheerst", en:"composed / controlled", level:"C2", theme:"emotions", art:"", pos:"adj", ex:"Hij reageerde opvallend beheerst.", exEn:"He reacted strikingly composedly." },
+  // abstract & academic (argumentation)
+  { nl:"stelling", en:"proposition / thesis", level:"C1", theme:"abstract", art:"de", pos:"noun", ex:"Ik verdedig de volgende stelling.", exEn:"I defend the following proposition." },
+  { nl:"aanname", en:"assumption", level:"C1", theme:"abstract", art:"de", pos:"noun", ex:"Die aanname klopt niet.", exEn:"That assumption is incorrect." },
+  { nl:"tegenstelling", en:"contrast / opposition", level:"C1", theme:"abstract", art:"de", pos:"noun", ex:"In tegenstelling tot jou denk ik van wel.", exEn:"Unlike you, I think so." },
+  { nl:"verband", en:"connection / link", level:"B2", theme:"abstract", art:"het", pos:"noun", ex:"Er is een duidelijk verband tussen beide.", exEn:"There is a clear link between the two." },
+  { nl:"oorzaak", en:"cause", level:"B2", theme:"abstract", art:"de", pos:"noun", ex:"De oorzaak is nog onbekend.", exEn:"The cause is still unknown." },
+  { nl:"gevolgtrekking", en:"inference / conclusion", level:"C2", theme:"abstract", art:"de", pos:"noun", ex:"Dat is een voorbarige gevolgtrekking.", exEn:"That is a premature inference." },
+  { nl:"kwestie", en:"matter / issue", level:"B2", theme:"abstract", art:"de", pos:"noun", ex:"Dat is een gevoelige kwestie.", exEn:"That is a sensitive matter." },
+  { nl:"dubbelzinnig", en:"ambiguous", level:"C1", theme:"abstract", art:"", pos:"adj", ex:"Zijn antwoord was dubbelzinnig.", exEn:"His answer was ambiguous." },
+  { nl:"impliciet", en:"implicit", level:"C2", theme:"abstract", art:"", pos:"adj", ex:"Die kritiek zat er impliciet in.", exEn:"That criticism was implicit in it." },
+  { nl:"expliciet", en:"explicit", level:"C1", theme:"abstract", art:"", pos:"adj", ex:"Wees expliciet over je verwachtingen.", exEn:"Be explicit about your expectations." },
+  { nl:"drogreden", en:"fallacy", level:"C2", theme:"abstract", art:"de", pos:"noun", ex:"Dat is een klassieke drogreden.", exEn:"That is a classic fallacy." },
+  { nl:"premisse", en:"premise", level:"C2", theme:"abstract", art:"de", pos:"noun", ex:"De redenering rust op een zwakke premisse.", exEn:"The reasoning rests on a weak premise." },
+  { nl:"ontoereikend", en:"inadequate", level:"C2", theme:"abstract", art:"", pos:"adj", ex:"De maatregelen bleken ontoereikend.", exEn:"The measures proved inadequate." },
+  // idioms (more)
+  { nl:"de dans ontspringen", en:"to have a narrow escape", level:"C2", theme:"idioms", art:"", pos:"idiom", ex:"Deze keer is hij de dans ontsprongen.", exEn:"This time he had a narrow escape." },
+  { nl:"om de hete brij heen draaien", en:"to beat around the bush", level:"C2", theme:"idioms", art:"", pos:"idiom", ex:"Draai niet om de hete brij heen.", exEn:"Don't beat around the bush." },
+  { nl:"een koekje van eigen deeg", en:"a taste of one's own medicine", level:"C2", theme:"idioms", art:"", pos:"idiom", ex:"Dat was een koekje van eigen deeg.", exEn:"That was a taste of his own medicine." },
+  { nl:"dweilen met de kraan open", en:"a futile effort", level:"C2", theme:"idioms", art:"", pos:"idiom", ex:"Zonder beleid is het dweilen met de kraan open.", exEn:"Without policy it's a futile effort." },
+  { nl:"als puntje bij paaltje komt", en:"when push comes to shove", level:"C2", theme:"idioms", art:"", pos:"idiom", ex:"Als puntje bij paaltje komt, helpt hij toch.", exEn:"When push comes to shove, he helps after all." },
 ];
 
 /* Grammar lessons. tip = teacher's key takeaway. body = HTML.
@@ -904,6 +967,62 @@ const GRAMMAR = [
       { q:"'to make the decision' idiom:", options:["de knoop doorhakken","de kat uit de boom kijken","de plank misslaan"], answer:0, explain:"'de knoop doorhakken' = to make the decisive call." },
     ]
   },
+  {
+    id:"g-diminutive", level:"A2", title:"Diminutives (-je) and why they matter", theme:"food",
+    tip:"Add -je to make something small, cute, or casual. Every diminutive becomes a HET-word, whatever the original article was.",
+    body:`<p>Dutch loves diminutives. The basic ending is <b>-je</b>, with variants (<b>-tje, -etje, -pje, -kje</b>) depending on the sound before it.</p>
+    <ul>
+      <li><span class="ex">het huis → het <b>huisje</b>, de man → het <b>mannetje</b>, de bloem → het <b>bloemetje</b></span></li>
+      <li>They soften a request: <span class="ex">Een <b>momentje</b>! / Zullen we een <b>bakkie</b> doen?</span></li>
+      <li>Crucially, a diminutive is <b>always het</b> and its plural adds <b>-s</b>: <span class="ex">de huisjes</span>.</li>
+    </ul>`,
+    quiz:[
+      { q:"The diminutive of 'huis' takes which article?", options:["de","het","een de"], answer:1, explain:"All diminutives are het-words: het huisje." },
+      { q:"'A little moment' =", options:["een momentje","een momentetje","een momentkje"], answer:0, explain:"moment → momentje." },
+    ]
+  },
+  {
+    id:"g-omte", level:"B1", title:"Purpose: om … te + infinitive", theme:"education",
+    tip:"To say 'in order to', wrap the goal in 'om … te'. The 'te' sits right before the infinitive at the end of the clause.",
+    body:`<p><b>om … te + infinitive</b> expresses purpose ("in order to").</p>
+    <ul>
+      <li><span class="ex">Ik leer Nederlands <b>om</b> in Amsterdam <b>te</b> werken.</span> (…in order to work in Amsterdam.)</li>
+      <li>With a separable verb, <b>te</b> goes inside: <span class="ex">…<b>om</b> je <b>op te</b> bellen.</span></li>
+      <li>Plain <b>te + infinitive</b> also follows many verbs: <span class="ex">Ik probeer <b>te</b> komen. Ze hoopt <b>te</b> slagen.</span></li>
+    </ul>`,
+    quiz:[
+      { q:"'I'm going to town to shop' = Ik ga naar de stad ___ winkelen.", options:["om te","te om","voor te"], answer:0, explain:"Purpose = om … te: 'om te winkelen'." },
+      { q:"Separable 'opbellen': …om je ___.", options:["op te bellen","te opbellen","op bellen te"], answer:0, explain:"'te' slots inside a separable verb: op te bellen." },
+    ]
+  },
+  {
+    id:"g-prepositions", level:"B2", title:"Fixed verb + preposition combinations", theme:"abstract",
+    tip:"Dutch verbs bind to specific prepositions that rarely match English. Learn 'wachten OP', 'denken AAN', 'houden VAN' as whole units.",
+    body:`<p>Many verbs demand a fixed preposition — memorise them together, because they seldom translate literally.</p>
+    <ul>
+      <li><span class="ex">wachten <b>op</b></span> (to wait for), <span class="ex">denken <b>aan</b></span> (to think of), <span class="ex">houden <b>van</b></span> (to love)</li>
+      <li><span class="ex">zich ergeren <b>aan</b></span> (to be annoyed by), <span class="ex">deelnemen <b>aan</b></span> (to take part in)</li>
+      <li>When the object is a thing, the preposition fuses with <b>er/waar</b>: <span class="ex">Ik wacht <b>erop</b>. Waar denk je <b>aan</b>?</span></li>
+    </ul>`,
+    quiz:[
+      { q:"'I'm waiting for the bus' = Ik wacht ___ de bus.", options:["voor","op","aan"], answer:1, explain:"wachten binds to 'op': wachten op de bus." },
+      { q:"'She loves music' = Ze houdt ___ muziek.", options:["van","over","aan"], answer:0, explain:"houden van = to love." },
+    ]
+  },
+  {
+    id:"g-reported", level:"C1", title:"Indirect (reported) speech", theme:"society",
+    tip:"When you report what someone said, open with 'dat' — and remember: after 'dat', the verb drops to the end of the clause.",
+    body:`<p>To report speech, embed it in a <b>dat</b>-clause; the verb then moves to the end.</p>
+    <ul>
+      <li>Direct: <span class="ex">Hij zei: "Ik <b>kom</b> morgen."</span></li>
+      <li>Indirect: <span class="ex">Hij zei <b>dat</b> hij morgen <b>kwam</b>.</span> (tense often shifts back)</li>
+      <li>Reported questions use the question word or <b>of</b> ("whether"): <span class="ex">Ze vroeg <b>of</b> ik tijd <b>had</b>.</span></li>
+    </ul>`,
+    quiz:[
+      { q:"Report it: 'Hij zei dat hij ziek ___.'", options:["is","was","zijn"], answer:1, explain:"Reported speech shifts back and the verb goes last: '…dat hij ziek was.'" },
+      { q:"'She asked whether I was coming' = Ze vroeg ___ ik kwam.", options:["dat","of","als"], answer:1, explain:"Reported yes/no question uses 'of' (whether)." },
+    ]
+  },
 ];
 
 /* Sentence bank for translation & dictation, tagged by theme + level. */
@@ -935,4 +1054,145 @@ const SENTENCES = [
   { level:"C2", theme:"emotions", nl:"Schoorvoetend gaf hij toe dat hij ongelijk had.", en:"Reluctantly he admitted that he was wrong." },
 ];
 
-window.DUTCH = { LEVELS, THEMES, VOCAB, GRAMMAR, SENTENCES };
+/* Reading passages — graded texts A2→C2 with a teacher intro, glossary and
+   comprehension questions. Extended reading is the single biggest driver of
+   progress toward B2/C1/C2, so each level steps up in length and register.
+   text = array of paragraphs (Dutch). glossary = key words. questions = quiz. */
+const READINGS = [
+  {
+    id:"r-amsterdam", level:"A2", theme:"travel", title:"Een dag in Amsterdam", titleEn:"A day in Amsterdam",
+    intro:"A gentle first text. Don't translate every word — read for the gist and let the story pull you along. Then use the glossary and read it a second time.",
+    text:[
+      "Vandaag ga ik met de trein naar Amsterdam. Ik sta vroeg op en neem een kop koffie. Om acht uur vertrekt mijn trein vanaf het station. De reis duurt ongeveer een half uur.",
+      "In Amsterdam loop ik eerst naar een museum. Het is niet ver van het Centraal Station. Onderweg zie ik veel fietsen en grachten. Amsterdam is een drukke maar mooie stad.",
+      "'s Middags eet ik een broodje in een klein café. Daarna koop ik een cadeau voor mijn moeder. Rond vijf uur ben ik moe, dus ik ga terug naar het station. In de trein naar huis lees ik een boek. Het was een leuke dag."
+    ],
+    glossary:[
+      { nl:"onderweg", en:"on the way" }, { nl:"gracht", en:"canal" },
+      { nl:"druk", en:"busy" }, { nl:"broodje", en:"(bread) roll, sandwich" },
+      { nl:"cadeau", en:"gift" }, { nl:"terug", en:"back" }
+    ],
+    questions:[
+      { q:"How does the narrator travel to Amsterdam?", options:["By bike","By train","By car"], answer:1, explain:"'Ik ga met de trein naar Amsterdam.'" },
+      { q:"How long does the journey take?", options:["About half an hour","Two hours","Five hours"], answer:0, explain:"'De reis duurt ongeveer een half uur.'" },
+      { q:"What does the narrator buy?", options:["A book","A gift for their mother","Nothing"], answer:1, explain:"'Daarna koop ik een cadeau voor mijn moeder.'" }
+    ]
+  },
+  {
+    id:"r-markt", level:"B1", theme:"shopping", title:"Op de markt", titleEn:"At the market",
+    intro:"Notice how the writer links sentences with small words — 'daarna', 'voordat', 'dus'. Spotting these connectors is a B1 reading skill; underline them as you go.",
+    text:[
+      "Elke zaterdag ga ik naar de markt in mijn buurt. De markt begint om negen uur en duurt tot een uur of vijf. Ik vind het er altijd gezellig.",
+      "Bij de eerste kraam koop ik groente en fruit. De verkoper kent mij inmiddels en geeft me soms een extra appel. Verse producten zijn op de markt vaak goedkoper dan in de supermarkt.",
+      "Daarna loop ik naar de kaaskraam. De geur van oude kaas hangt in de lucht. Ik mag altijd eerst proeven voordat ik iets koop. Vandaag neem ik een stuk belegen kaas en wat olijven.",
+      "Voordat ik naar huis ga, drink ik nog een kop koffie. Met volle tassen fiets ik tevreden terug."
+    ],
+    glossary:[
+      { nl:"kraam", en:"stall" }, { nl:"verkoper", en:"seller" }, { nl:"vers", en:"fresh" },
+      { nl:"geur", en:"smell" }, { nl:"belegen", en:"matured (cheese)" }, { nl:"tevreden", en:"satisfied" }
+    ],
+    questions:[
+      { q:"When does the market close?", options:["At nine","Around five","At midnight"], answer:1, explain:"'…duurt tot een uur of vijf.'" },
+      { q:"Why does the seller give an extra apple?", options:["By mistake","Because he knows the narrator","Because it's rotten"], answer:1, explain:"'De verkoper kent mij inmiddels…'" },
+      { q:"Can the narrator taste the cheese first?", options:["Yes, always","No, never","Only after paying"], answer:0, explain:"'Ik mag altijd eerst proeven…'" }
+    ]
+  },
+  {
+    id:"r-werk", level:"B1", theme:"work", title:"Werken in Nederland", titleEn:"Working in the Netherlands",
+    intro:"A cultural text — useful if you plan to work here. Watch for the topic sentence of each paragraph; Dutch non-fiction states its point early, then explains.",
+    text:[
+      "Nederland staat bekend om zijn goede balans tussen werk en privéleven. Veel mensen werken parttime, ook mannen. Op woensdag of vrijdag zijn kantoren daarom vaak rustiger.",
+      "Nederlanders zijn op het werk vrij direct. Ze zeggen meestal gewoon wat ze denken, ook tegen hun baas. Voor buitenlanders lijkt dit soms onbeleefd, maar het is niet zo bedoeld. Eerlijkheid wordt juist gewaardeerd.",
+      "Beslissingen worden vaak samen genomen. Dit heet 'overleggen'. Iedereen mag zijn mening geven, en pas daarna neemt men een besluit. Dat kost tijd, maar zorgt voor draagvlak. Wie in Nederland wil werken, moet dus wennen aan overleg en directheid."
+    ],
+    glossary:[
+      { nl:"privéleven", en:"private life" }, { nl:"direct", en:"direct, blunt" },
+      { nl:"onbeleefd", en:"impolite" }, { nl:"overleggen", en:"to consult, deliberate" },
+      { nl:"draagvlak", en:"support, buy-in" }, { nl:"wennen aan", en:"to get used to" }
+    ],
+    questions:[
+      { q:"Why are offices quieter on some weekdays?", options:["Many people work part-time","Public holidays","Frequent strikes"], answer:0, explain:"'Veel mensen werken parttime… daarom vaak rustiger.'" },
+      { q:"How do Dutch people tend to communicate at work?", options:["Indirectly","Directly and honestly","They avoid talking"], answer:1, explain:"'Nederlanders zijn op het werk vrij direct… Eerlijkheid wordt gewaardeerd.'" },
+      { q:"What is 'overleggen'?", options:["The boss decides alone","Deciding together after everyone gives an opinion","Working overtime"], answer:1, explain:"'Iedereen mag zijn mening geven, en pas daarna neemt men een besluit.'" }
+    ]
+  },
+  {
+    id:"r-woningnood", level:"B2", theme:"society", title:"De woningnood", titleEn:"The housing shortage",
+    intro:"Now the register rises: a news-style analysis with cause and effect. Track the argument — problem, causes, response, outlook. This is exactly the structure the state exams test.",
+    text:[
+      "In veel Nederlandse steden is het bijna onmogelijk om een betaalbare woning te vinden. De vraag naar huizen is veel groter dan het aanbod. Vooral jongeren en starters komen moeilijk aan een huis.",
+      "De oorzaken zijn divers. Er worden te weinig nieuwe woningen gebouwd, de bevolking groeit, en de huizenprijzen stijgen al jaren. Bovendien kopen beleggers woningen op om ze duur te verhuren.",
+      "De overheid probeert in te grijpen met nieuwe maatregelen, zoals het bouwen van meer huurwoningen en strengere regels voor beleggers. Toch is er geen snelle oplossing. Deskundigen verwachten dat de woningnood nog jaren zal duren. Voor veel mensen betekent dit langer wachten, of noodgedwongen buiten de stad gaan wonen."
+    ],
+    glossary:[
+      { nl:"woningnood", en:"housing shortage" }, { nl:"betaalbaar", en:"affordable" },
+      { nl:"het aanbod", en:"supply" }, { nl:"belegger", en:"investor" },
+      { nl:"ingrijpen", en:"to intervene" }, { nl:"noodgedwongen", en:"forced by necessity" }
+    ],
+    questions:[
+      { q:"What is the core cause of the shortage?", options:["Demand far exceeds supply","Too many homes are built","Nobody wants to buy"], answer:0, explain:"'De vraag naar huizen is veel groter dan het aanbod.'" },
+      { q:"What do investors do, according to the text?", options:["Build affordable homes","Buy homes to rent out expensively","Lower prices"], answer:1, explain:"'…beleggers woningen op om ze duur te verhuren.'" },
+      { q:"What do experts expect?", options:["A quick fix","The shortage to last for years","Prices to crash"], answer:1, explain:"'…verwachten dat de woningnood nog jaren zal duren.'" }
+    ]
+  },
+  {
+    id:"r-privacy", level:"B2", theme:"tech", title:"Digitale privacy", titleEn:"Digital privacy",
+    intro:"An opinion piece. The writer has a clear stance — find it, then notice how each paragraph supports it. Ask yourself: where does description end and argument begin?",
+    text:[
+      "Elke dag laten we online sporen na. Websites volgen ons gedrag met cookies, apps vragen toegang tot onze locatie, en sociale media weten vaak meer over ons dan onze eigen familie. Veel mensen accepteren dit zonder er lang bij stil te staan.",
+      "Toch is privacy geen luxe, maar een recht. Wie zijn gegevens zomaar weggeeft, verliest een deel van zijn vrijheid. Bedrijven verdienen immers geld met die informatie, en niet altijd op een eerlijke manier.",
+      "Gelukkig groeit het bewustzijn. Er komen strengere wetten, zoals de Europese privacywetgeving, en steeds meer mensen beschermen hun gegevens bewust. Volledige controle is een illusie, maar wie oplet, kan zijn digitale sporen in elk geval beperken."
+    ],
+    glossary:[
+      { nl:"sporen nalaten", en:"to leave traces" }, { nl:"gedrag", en:"behaviour" },
+      { nl:"toegang", en:"access" }, { nl:"de gegevens", en:"data" },
+      { nl:"het bewustzijn", en:"awareness" }, { nl:"beperken", en:"to limit" }
+    ],
+    questions:[
+      { q:"What does the author consider privacy to be?", options:["A luxury","A right","Unimportant"], answer:1, explain:"'Toch is privacy geen luxe, maar een recht.'" },
+      { q:"Why do companies want our data?", options:["To protect us","They make money from it","To delete it"], answer:1, explain:"'Bedrijven verdienen immers geld met die informatie.'" },
+      { q:"Is total control of your data possible, per the text?", options:["Yes, easily","No, but you can limit your traces","Only for companies"], answer:1, explain:"'Volledige controle is een illusie, maar wie oplet, kan… beperken.'" }
+    ]
+  },
+  {
+    id:"r-technologie", level:"C1", theme:"abstract", title:"De keerzijde van technologie", titleEn:"The flip side of technology",
+    intro:"A balanced argumentative essay. Master the 'enerzijds… anderzijds…' structure here — being able to weigh two sides in Dutch is a defining C1 skill, in reading and in writing.",
+    text:[
+      "Technologie wordt vaak voorgesteld als een onvermijdelijke vooruitgang. Smartphones, sociale media en kunstmatige intelligentie hebben ons leven ontegenzeglijk gemakkelijker gemaakt. Toch verdient dit optimisme enige nuance.",
+      "Enerzijds vergroot technologie onze mogelijkheden: we communiceren wereldwijd, werken efficiënter en hebben kennis binnen handbereik. Anderzijds brengt diezelfde technologie nieuwe problemen met zich mee. Onze aandacht wordt voortdurend afgeleid, privacy staat onder druk, en algoritmes bepalen in toenemende mate wat we zien en denken.",
+      "Het is dan ook te simpel om technologie louter als zegen of als vloek te bestempelen. De werkelijke vraag is niet óf we technologie gebruiken, maar hóe. Wie er kritisch en bewust mee omgaat, plukt de vruchten zonder zich te laten beheersen."
+    ],
+    glossary:[
+      { nl:"onvermijdelijk", en:"inevitable" }, { nl:"ontegenzeglijk", en:"undeniably" },
+      { nl:"binnen handbereik", en:"within reach" }, { nl:"afleiden", en:"to distract" },
+      { nl:"louter", en:"merely" }, { nl:"de vruchten plukken", en:"to reap the benefits" }
+    ],
+    questions:[
+      { q:"What is the author's overall stance?", options:["Purely positive","Purely negative","Nuanced — it depends on how we use it"], answer:2, explain:"'De werkelijke vraag is niet óf we technologie gebruiken, maar hóe.'" },
+      { q:"Which downside is mentioned?", options:["Devices are too cheap","Attention is distracted and privacy is under pressure","Communication is slower"], answer:1, explain:"'Onze aandacht wordt voortdurend afgeleid, privacy staat onder druk…'" },
+      { q:"'Enerzijds… anderzijds…' signals that the writer is…", options:["telling a story","weighing two sides","giving instructions"], answer:1, explain:"It introduces a balanced 'on the one hand… on the other hand…' contrast." }
+    ]
+  },
+  {
+    id:"r-duurzaam", level:"C2", theme:"abstract", title:"Duurzaamheid: meer dan een modewoord", titleEn:"Sustainability: more than a buzzword",
+    intro:"A polished opinion column with irony and idiom. At C2 you read between the lines — catch the writer's scepticism and the force of the closing metaphor.",
+    text:[
+      "'Duurzaam' is uitgegroeid tot een van de meest gebruikte — en meest uitgeholde — woorden van deze tijd. Bedrijven strooien er gretig mee, want een groen imago verkoopt. Maar achter de fraaie leuzen gaat lang niet altijd een oprechte overtuiging schuil.",
+      "Ware duurzaamheid vergt meer dan een recyclebare verpakking of een enkele geplante boom. Ze vraagt om structurele keuzes die op korte termijn geld kosten en pas op lange termijn lonen — precies het soort keuzes waar zowel bedrijven als consumenten voor terugdeinzen.",
+      "Wie werkelijk verandering wil, moet verder kijken dan symboolpolitiek. Niet het etiket, maar de daadwerkelijke impact zou de maatstaf moeten zijn. Zolang duurzaamheid vooral een verkoopargument blijft, dweilen we met de kraan open."
+    ],
+    glossary:[
+      { nl:"uitgehold", en:"hollowed out" }, { nl:"de leuze", en:"slogan" },
+      { nl:"schuilgaan", en:"to be hidden" }, { nl:"terugdeinzen", en:"to shrink back" },
+      { nl:"symboolpolitiek", en:"tokenism, symbolic politics" }, { nl:"de maatstaf", en:"the yardstick" },
+      { nl:"dweilen met de kraan open", en:"a futile effort (mopping with the tap running)" }
+    ],
+    questions:[
+      { q:"How does the author view companies' use of 'duurzaam'?", options:["Always sincere","Often a marketing image","Legally required"], answer:1, explain:"'…een groen imago verkoopt. Maar achter de fraaie leuzen gaat lang niet altijd een oprechte overtuiging schuil.'" },
+      { q:"What does true sustainability require, per the text?", options:["Recyclable packaging","Planting one tree","Structural, long-term choices"], answer:2, explain:"'Ze vraagt om structurele keuzes die… pas op lange termijn lonen.'" },
+      { q:"The closing idiom implies current efforts are…", options:["effective","futile","inexpensive"], answer:1, explain:"'Dweilen met de kraan open' = a pointless, futile effort." }
+    ]
+  }
+];
+
+window.DUTCH = { LEVELS, THEMES, VOCAB, GRAMMAR, SENTENCES, READINGS };
